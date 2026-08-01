@@ -19,6 +19,9 @@ namespace CargoClash.Movement
         [SerializeField, Min(0.1f)]
         private float movementSpeed = 5f;
 
+        [SerializeField]
+        private GridOccupancyManager occupancyManager;
+
         [Header("Collision")]
         [SerializeField]
         private LayerMask obstacleLayer;
@@ -38,6 +41,31 @@ namespace CargoClash.Movement
         {
             CurrentCell = WorldToGrid(transform.position);
             SnapToCurrentCell();
+
+            if (occupancyManager == null)
+            {
+                occupancyManager =
+                       FindAnyObjectByType<GridOccupancyManager>();
+            }
+
+            if (occupancyManager == null)
+            {
+                Debug.LogError(
+                    "GridOccupancyManager was not found.",
+                    this);
+
+                enabled = false;
+                return;
+            }
+
+            if (!occupancyManager.TryRegister(this, CurrentCell))
+            {
+                Debug.LogError(
+                    $"Starting cell {CurrentCell} is already occupied.",
+                    this);
+
+                enabled = false;
+            }
         }
 
         private void Update()
@@ -76,6 +104,11 @@ namespace CargoClash.Movement
                 return false;
             }
 
+            if (occupancyManager.IsOccupied(targetCell, this))
+            {
+                return false;
+            }
+
             Vector3 targetPosition = GridToWorld(targetCell);
 
             if (IsCellBlocked(targetPosition))
@@ -94,6 +127,14 @@ namespace CargoClash.Movement
             Vector3 targetPosition)
         {
             isMoving = true;
+
+            Vector2Int previousCell = CurrentCell;
+
+            if (!occupancyManager.TryRegister(this, targetCell))
+            {
+                isMoving = false;
+                yield break;
+            }
 
             Vector3 startPosition = transform.position;
 
@@ -123,6 +164,9 @@ namespace CargoClash.Movement
 
             transform.position = targetPosition;
             CurrentCell = targetCell;
+
+            occupancyManager.Release(this, previousCell);
+
             isMoving = false;
         }
 
