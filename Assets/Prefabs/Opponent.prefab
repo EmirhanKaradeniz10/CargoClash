@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3078557802807398884
+--- !u!1 &1622974352518742489
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,49 +8,49 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6530927735444729887}
-  - component: {fileID: 3447378711546126339}
-  - component: {fileID: 2107136747743767301}
-  - component: {fileID: 3265446779103652954}
-  - component: {fileID: 5059686343740330512}
-  - component: {fileID: -1958791750832642110}
+  - component: {fileID: 7394434214751985698}
+  - component: {fileID: 1435318137046691902}
+  - component: {fileID: 2378682514393070392}
+  - component: {fileID: 1255932663887182951}
+  - component: {fileID: 8794218895917253165}
+  - component: {fileID: 4882748244546016693}
   m_Layer: 0
-  m_Name: Player
+  m_Name: Opponent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6530927735444729887
+--- !u!4 &7394434214751985698
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3078557802807398884}
+  m_GameObject: {fileID: 1622974352518742489}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4, y: 0.5, z: 10}
+  m_LocalPosition: {x: 15, y: 0.5, z: 10}
   m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &3447378711546126339
+--- !u!33 &1435318137046691902
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3078557802807398884}
+  m_GameObject: {fileID: 1622974352518742489}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &2107136747743767301
+--- !u!23 &2378682514393070392
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3078557802807398884}
+  m_GameObject: {fileID: 1622974352518742489}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -69,7 +69,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 665e8cbfd78c7104294e7f176d7a13fb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -93,13 +93,13 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &3265446779103652954
+--- !u!136 &1255932663887182951
 CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3078557802807398884}
+  m_GameObject: {fileID: 1622974352518742489}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -116,13 +116,13 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5059686343740330512
+--- !u!114 &8794218895917253165
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3078557802807398884}
+  m_GameObject: {fileID: 1622974352518742489}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f51595bef00ffb842a1ac63f713583fa, type: 3}
@@ -137,15 +137,17 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   collisionBoxHalfExtents: {x: 0.35, y: 0.4, z: 0.35}
---- !u!114 &-1958791750832642110
+--- !u!114 &4882748244546016693
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3078557802807398884}
+  m_GameObject: {fileID: 1622974352518742489}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04c570d2f01304d4eac38dca201aa584, type: 3}
+  m_Script: {fileID: 11500000, guid: 47fc93d7eaa775e45901cfd615891d9a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Movement.HumanGridInput
+  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Movement.ScriptedGridBot
+  minimumDecisionDelay: 0.15
+  maximumDecisionDelay: 0.35
