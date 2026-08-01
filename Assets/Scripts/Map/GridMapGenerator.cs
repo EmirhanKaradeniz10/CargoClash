@@ -52,6 +52,8 @@ namespace CargoClash.Map
             new(8,4), new(9,4), new(10,4), new(11,4)
         };
 
+        private static readonly HashSet<Vector2Int> BlockedCellSet = new(BlockedCells);
+
         private void Start()
         {
             Generate();
@@ -107,6 +109,10 @@ namespace CargoClash.Map
                 cell.x * cellSize,
                 0f,
                 cell.y * cellSize);
+        }
+        public bool IsBlocked(Vector2Int cell)
+        {
+            return BlockedCellSet.Contains(cell);
         }
     }
 }

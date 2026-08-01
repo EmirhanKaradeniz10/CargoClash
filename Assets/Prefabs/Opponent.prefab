@@ -149,5 +149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47fc93d7eaa775e45901cfd615891d9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Movement.ScriptedGridBot
-  minimumDecisionDelay: 0.15
-  maximumDecisionDelay: 0.35
+  decisionDelay: 0.15
+  targetMarkerPrefab: {fileID: 7885850592278506430, guid: a7b54e828a4b35b49a41f1d8799c5786, type: 3}
+  targetMarkerHeight: 0.05
+  targetSelectionAttempts: 30

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace CargoClash.Movement
@@ -7,80 +8,173 @@ namespace CargoClash.Movement
     {
         [Header("Decision Timing")]
         [SerializeField, Min(0.05f)]
-        private float minimumDecisionDelay = 0.15f;
+        private float decisionDelay = 0.15f;
 
-        [SerializeField, Min(0.05f)]
-        private float maximumDecisionDelay = 0.35f;
+        [Header("Debug")]
+        [SerializeField]
+        private GameObject targetMarkerPrefab;
 
-        private static readonly Vector2Int[] Directions =
-        {
-            Vector2Int.up,
-            Vector2Int.down,
-            Vector2Int.left,
-            Vector2Int.right
-        };
+        [SerializeField, Min(0f)]
+        private float targetMarkerHeight = 0.05f;
+
+        private GameObject targetMarkerInstance;
+
+        [Header("Target Selection")]
+        [SerializeField, Min(1)]
+        private int targetSelectionAttempts = 30;
 
         private GridMovementController movementController;
+        private GridPathfinder pathfinder;
+
+        private List<Vector2Int> currentPath = new();
+        private int pathIndex;
         private float nextDecisionTime;
 
         private void Awake()
         {
             movementController =
                 GetComponent<GridMovementController>();
+
+            pathfinder =
+                FindAnyObjectByType<GridPathfinder>();
         }
 
         private void Start()
         {
+            if (pathfinder == null)
+            {
+                Debug.LogError(
+                    "GridPathfinder was not found.",
+                    this);
+
+                enabled = false;
+                return;
+            }
+
             ScheduleNextDecision();
         }
 
         private void Update()
         {
-            if (Time.time < nextDecisionTime)
+            if (Time.time < nextDecisionTime ||
+                movementController.IsMoving)
             {
                 return;
             }
 
-            if (movementController.IsMoving)
+            if (pathIndex >= currentPath.Count)
             {
-                return;
+                HideTargetMarker();
+                SelectNewTarget();
             }
 
-            TryRandomMovement();
+            FollowCurrentPath();
             ScheduleNextDecision();
         }
 
-        private void TryRandomMovement()
+        private void SelectNewTarget()
         {
-            int startingIndex = Random.Range(0, Directions.Length);
+            currentPath.Clear();
+            pathIndex = 0;
 
-            for (int offset = 0; offset < Directions.Length; offset++)
+            for (int attempt = 0;
+                 attempt < targetSelectionAttempts;
+                 attempt++)
             {
-                int directionIndex =
-                    (startingIndex + offset) % Directions.Length;
+                Vector2Int targetCell = new(
+                    Random.Range(0, 20),
+                    Random.Range(0, 20));
 
-                Vector2Int direction = Directions[directionIndex];
-
-                if (movementController.TryMove(direction))
+                if (!pathfinder.IsWalkable(
+                        targetCell,
+                        movementController))
                 {
-                    return;
+                    continue;
                 }
+
+                List<Vector2Int> path =
+                    pathfinder.FindPath(
+                        movementController.CurrentCell,
+                        targetCell,
+                        movementController);
+
+                if (path.Count == 0)
+                {
+                    continue;
+                }
+
+                currentPath = path;
+                UpdateTargetMarker(targetCell);
+                return;
+            }
+        }
+
+        private void FollowCurrentPath()
+        {
+            if (pathIndex >= currentPath.Count)
+            {
+                return;
+            }
+
+            Vector2Int nextCell =
+                currentPath[pathIndex];
+
+            Vector2Int direction =
+                nextCell -
+                movementController.CurrentCell;
+
+            if (movementController.TryMove(direction))
+            {
+                pathIndex++;
+                return;
+            }
+
+            // Yol, diğer oyuncunun hareketi nedeniyle
+            // geçersiz hâle gelmiş olabilir.
+            currentPath.Clear();
+            pathIndex = 0;
+        }
+
+        private void UpdateTargetMarker(Vector2Int targetCell)
+        {
+            if (targetMarkerPrefab == null)
+            {
+                return;
+            }
+
+            if (targetMarkerInstance == null)
+            {
+                targetMarkerInstance = Instantiate(targetMarkerPrefab);
+                targetMarkerInstance.name = $"{name}_TargetMarker";
+            }
+
+            targetMarkerInstance.transform.position = new Vector3(
+                targetCell.x,
+                targetMarkerHeight,
+                targetCell.y);
+
+            targetMarkerInstance.SetActive(true);
+        }
+
+        private void HideTargetMarker()
+        {
+            if (targetMarkerInstance != null)
+            {
+                targetMarkerInstance.SetActive(false);
+            }
+        }
+        private void OnDestroy()
+        {
+            if (targetMarkerInstance != null)
+            {
+                Destroy(targetMarkerInstance);
             }
         }
 
         private void ScheduleNextDecision()
         {
-            nextDecisionTime = Time.time + Random.Range(
-                minimumDecisionDelay,
-                maximumDecisionDelay);
-        }
-
-        private void OnValidate()
-        {
-            if (maximumDecisionDelay < minimumDecisionDelay)
-            {
-                maximumDecisionDelay = minimumDecisionDelay;
-            }
+            nextDecisionTime =
+                Time.time + decisionDelay;
         }
     }
 }
