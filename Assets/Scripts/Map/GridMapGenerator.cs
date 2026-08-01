@@ -11,7 +11,6 @@ namespace CargoClash.Map
         [Header("Visuals")]
         [SerializeField] private Transform obstacleParent;
         [SerializeField] private GameObject obstaclePrefab;
-        [SerializeField, Min(0.1f)] private float obstacleHeight = 1.5f;
 
         private readonly List<GameObject> generatedObstacles = new();
 
@@ -84,9 +83,6 @@ namespace CargoClash.Map
                     obstacleParent);
 
                 obstacle.name = $"Obstacle_{cell.x}_{cell.y}";
-                obstacle.transform.localScale =
-                    new Vector3(cellSize, obstacleHeight, cellSize);
-
                 generatedObstacles.Add(obstacle);
             }
         }
@@ -109,7 +105,7 @@ namespace CargoClash.Map
         {
             return new Vector3(
                 cell.x * cellSize,
-                obstacleHeight * 0.5f,
+                0f,
                 cell.y * cellSize);
         }
     }

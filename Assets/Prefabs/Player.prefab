@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2107136747743767301}
   - component: {fileID: 3265446779103652954}
   - component: {fileID: 5059686343740330512}
+  - component: {fileID: 5925167094428910380}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -135,3 +136,15 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   collisionBoxHalfExtents: {x: 0.35, y: 0.4, z: 0.35}
+--- !u!114 &5925167094428910380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3078557802807398884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04c570d2f01304d4eac38dca201aa584, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Movement.HumanGridInput

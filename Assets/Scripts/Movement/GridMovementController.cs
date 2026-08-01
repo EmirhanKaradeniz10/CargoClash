@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace CargoClash.Movement
 {
@@ -33,6 +32,8 @@ namespace CargoClash.Movement
 
         public Vector2Int CurrentCell { get; private set; }
 
+        public bool IsMoving => isMoving;
+
         private void Awake()
         {
             CurrentCell = WorldToGrid(transform.position);
@@ -41,9 +42,8 @@ namespace CargoClash.Movement
 
         private void Update()
         {
-            ReadKeyboardInput();
-
-            if (!isMoving && bufferedDirection != Vector2Int.zero)
+            if (!isMoving &&
+                bufferedDirection != Vector2Int.zero)
             {
                 Vector2Int direction = bufferedDirection;
                 bufferedDirection = Vector2Int.zero;
@@ -52,51 +52,20 @@ namespace CargoClash.Movement
             }
         }
 
-        private void ReadKeyboardInput()
-        {
-            Keyboard keyboard = Keyboard.current;
-
-            if (keyboard == null)
-            {
-                return;
-            }
-
-            if (keyboard.wKey.wasPressedThisFrame ||
-                keyboard.upArrowKey.wasPressedThisFrame)
-            {
-                bufferedDirection = Vector2Int.up;
-            }
-            else if (keyboard.sKey.wasPressedThisFrame ||
-                     keyboard.downArrowKey.wasPressedThisFrame)
-            {
-                bufferedDirection = Vector2Int.down;
-            }
-            else if (keyboard.aKey.wasPressedThisFrame ||
-                     keyboard.leftArrowKey.wasPressedThisFrame)
-            {
-                bufferedDirection = Vector2Int.left;
-            }
-            else if (keyboard.dKey.wasPressedThisFrame ||
-                     keyboard.rightArrowKey.wasPressedThisFrame)
-            {
-                bufferedDirection = Vector2Int.right;
-            }
-        }
-
         public bool TryMove(Vector2Int direction)
         {
-            if (isMoving)
-            {
-                bufferedDirection = direction;
-                return false;
-            }
-
             if (!IsCardinalDirection(direction))
             {
                 Debug.LogWarning(
                     $"Invalid movement direction: {direction}",
                     this);
 
+                return false;
+            }
+
+            if (isMoving)
+            {
+                bufferedDirection = direction;
                 return false;
             }
 
@@ -127,6 +96,7 @@ namespace CargoClash.Movement
             isMoving = true;
 
             Vector3 startPosition = transform.position;
+
             float distance = Vector3.Distance(
                 startPosition,
                 targetPosition);
