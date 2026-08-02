@@ -23,6 +23,7 @@ namespace CargoClash.Gameplay
         private int halfHeight = 1;
 
         public PlayerSide Owner => owner;
+        public Vector2Int CenterCell => centerCell;
 
         public bool Contains(Vector2Int cell)
         {

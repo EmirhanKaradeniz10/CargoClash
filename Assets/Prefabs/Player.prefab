@@ -14,11 +14,11 @@ GameObject:
   - component: {fileID: 3265446779103652954}
   - component: {fileID: 5059686343740330512}
   - component: {fileID: -1958791750832642110}
-  - component: {fileID: 1250424300830504407}
   - component: {fileID: 2375966868777118529}
   - component: {fileID: 1541237414940549623}
-  - component: {fileID: 5702866975046325611}
   - component: {fileID: 6048841329916897655}
+  - component: {fileID: 3745115620777421858}
+  - component: {fileID: 6493679380209719498}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -155,19 +155,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04c570d2f01304d4eac38dca201aa584, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Movement.HumanGridInput
---- !u!114 &1250424300830504407
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3078557802807398884}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da9384a1344af654482be9288a465826, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.Cargo.CargoCarrier
-  carryPoint: {fileID: 6530927735444729887}
 --- !u!114 &2375966868777118529
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -193,18 +180,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.Cargo.CargoCarrier
   carryPoint: {fileID: 6243656364674884048}
---- !u!114 &5702866975046325611
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3078557802807398884}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb70b1897dadb984f94082ec8372bf03, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.Cargo.CargoPickupDetector
 --- !u!54 &6048841329916897655
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -232,6 +207,33 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &3745115620777421858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3078557802807398884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4d84300c765ec540b51905917df295c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.PlayerIdentity
+  side: 0
+--- !u!114 &6493679380209719498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3078557802807398884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23363d48ad2c76943b49e74069553660, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.Cargo.CargoDeliveryController
+  ownBase: {fileID: 0}
+  scoreManager: {fileID: 0}
 --- !u!1 &8178863191507415651
 GameObject:
   m_ObjectHideFlags: 0

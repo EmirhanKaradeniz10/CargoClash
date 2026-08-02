@@ -17,6 +17,9 @@ GameObject:
   - component: {fileID: 6870050819285195895}
   - component: {fileID: 6286029642833738204}
   - component: {fileID: 1319650454739166427}
+  - component: {fileID: 433371822624383041}
+  - component: {fileID: 4583579932772061095}
+  - component: {fileID: 8229219882254151794}
   m_Layer: 0
   m_Name: Opponent
   m_TagString: Untagged
@@ -154,9 +157,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Movement.ScriptedGridBot
   decisionDelay: 0.15
+  pathfinder: {fileID: 0}
+  ownBase: {fileID: 0}
   targetMarkerPrefab: {fileID: 7885850592278506430, guid: a7b54e828a4b35b49a41f1d8799c5786, type: 3}
   targetMarkerHeight: 0.05
-  targetSelectionAttempts: 30
 --- !u!114 &6870050819285195895
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -209,6 +213,46 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &433371822624383041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1622974352518742489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4d84300c765ec540b51905917df295c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.PlayerIdentity
+  side: 0
+--- !u!114 &4583579932772061095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1622974352518742489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4d84300c765ec540b51905917df295c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.PlayerIdentity
+  side: 1
+--- !u!114 &8229219882254151794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1622974352518742489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23363d48ad2c76943b49e74069553660, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.Cargo.CargoDeliveryController
+  ownBase: {fileID: 0}
+  scoreManager: {fileID: 0}
 --- !u!1 &2380753121110987179
 GameObject:
   m_ObjectHideFlags: 0

@@ -204,11 +204,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7394434214751985698, guid: 80a3fcaf7a8d99f4bb8ca2f8152d8e51, type: 3}
   m_PrefabInstance: {fileID: 5225632305302112661}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &310963494 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3078557802807398884, guid: e19825f352aeef043acd7d916f011234, type: 3}
-  m_PrefabInstance: {fileID: 7637649977693122113}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -522,33 +517,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6530927735444729887, guid: e19825f352aeef043acd7d916f011234, type: 3}
   m_PrefabInstance: {fileID: 7637649977693122113}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &565329977
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 310963494}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 23363d48ad2c76943b49e74069553660, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.Cargo.CargoDeliveryController
-  ownBase: {fileID: 786609105}
-  scoreManager: {fileID: 1484083096}
---- !u!114 &565329978
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 310963494}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4d84300c765ec540b51905917df295c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.PlayerIdentity
-  side: 0
 --- !u!1 &611129252
 GameObject:
   m_ObjectHideFlags: 0
@@ -1303,38 +1271,6 @@ MonoBehaviour:
   maximumCell: {x: 19, y: 19}
   mapGenerator: {fileID: 822759455}
   occupancyManager: {fileID: 338350676}
---- !u!1 &2032954831 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1622974352518742489, guid: 80a3fcaf7a8d99f4bb8ca2f8152d8e51, type: 3}
-  m_PrefabInstance: {fileID: 5225632305302112661}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2032954840
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2032954831}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4d84300c765ec540b51905917df295c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.PlayerIdentity
-  side: 1
---- !u!114 &2032954841
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2032954831}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 23363d48ad2c76943b49e74069553660, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.Cargo.CargoDeliveryController
-  ownBase: {fileID: 969425007}
-  scoreManager: {fileID: 1484083096}
 --- !u!1001 &5225632305302112661
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1347,6 +1283,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Opponent
       objectReference: {fileID: 0}
+    - target: {fileID: 4882748244546016693, guid: 80a3fcaf7a8d99f4bb8ca2f8152d8e51, type: 3}
+      propertyPath: ownBase
+      value: 
+      objectReference: {fileID: 969425007}
+    - target: {fileID: 4882748244546016693, guid: 80a3fcaf7a8d99f4bb8ca2f8152d8e51, type: 3}
+      propertyPath: pathfinder
+      value: 
+      objectReference: {fileID: 1975268772}
     - target: {fileID: 7394434214751985698, guid: 80a3fcaf7a8d99f4bb8ca2f8152d8e51, type: 3}
       propertyPath: m_LocalPosition.x
       value: 15
@@ -1387,20 +1331,23 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8229219882254151794, guid: 80a3fcaf7a8d99f4bb8ca2f8152d8e51, type: 3}
+      propertyPath: ownBase
+      value: 
+      objectReference: {fileID: 969425007}
+    - target: {fileID: 8229219882254151794, guid: 80a3fcaf7a8d99f4bb8ca2f8152d8e51, type: 3}
+      propertyPath: scoreManager
+      value: 
+      objectReference: {fileID: 1484083096}
     - target: {fileID: 8794218895917253165, guid: 80a3fcaf7a8d99f4bb8ca2f8152d8e51, type: 3}
       propertyPath: occupancyManager
       value: 
       objectReference: {fileID: 338350676}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 433371822624383041, guid: 80a3fcaf7a8d99f4bb8ca2f8152d8e51, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1622974352518742489, guid: 80a3fcaf7a8d99f4bb8ca2f8152d8e51, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2032954840}
-    - targetCorrespondingSourceObject: {fileID: 1622974352518742489, guid: 80a3fcaf7a8d99f4bb8ca2f8152d8e51, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2032954841}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 80a3fcaf7a8d99f4bb8ca2f8152d8e51, type: 3}
 --- !u!1001 &7637649977693122113
 PrefabInstance:
@@ -1418,6 +1365,14 @@ PrefabInstance:
       propertyPath: occupancyManager
       value: 
       objectReference: {fileID: 338350676}
+    - target: {fileID: 6493679380209719498, guid: e19825f352aeef043acd7d916f011234, type: 3}
+      propertyPath: ownBase
+      value: 
+      objectReference: {fileID: 786609105}
+    - target: {fileID: 6493679380209719498, guid: e19825f352aeef043acd7d916f011234, type: 3}
+      propertyPath: scoreManager
+      value: 
+      objectReference: {fileID: 1484083096}
     - target: {fileID: 6530927735444729887, guid: e19825f352aeef043acd7d916f011234, type: 3}
       propertyPath: m_LocalPosition.x
       value: 4
@@ -1458,18 +1413,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 1250424300830504407, guid: e19825f352aeef043acd7d916f011234, type: 3}
-    - {fileID: 5702866975046325611, guid: e19825f352aeef043acd7d916f011234, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3078557802807398884, guid: e19825f352aeef043acd7d916f011234, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 565329978}
-    - targetCorrespondingSourceObject: {fileID: 3078557802807398884, guid: e19825f352aeef043acd7d916f011234, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 565329977}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e19825f352aeef043acd7d916f011234, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
