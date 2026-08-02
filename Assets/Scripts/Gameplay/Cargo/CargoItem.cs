@@ -12,6 +12,10 @@ namespace CargoClash.Gameplay.Cargo
         private int scoreValue = 10;
 
         private CargoSpawnSlot originSlot;
+        private CargoCarrier carrier;
+
+        private Collider cargoCollider;
+        private Rigidbody cargoRigidbody;
 
         public CargoType CargoType => cargoType;
 
@@ -19,9 +23,20 @@ namespace CargoClash.Gameplay.Cargo
 
         public CargoSpawnSlot OriginSlot => originSlot;
 
+        public CargoCarrier Carrier => carrier;
+
+        public bool IsCarried => carrier != null;
+
+        private void Awake()
+        {
+            cargoCollider = GetComponent<Collider>();
+            cargoRigidbody = GetComponent<Rigidbody>();
+        }
+
         public void Initialize(CargoSpawnSlot spawnSlot)
         {
             originSlot = spawnSlot;
+            carrier = null;
         }
 
         public void RemoveFromSlot()
@@ -35,6 +50,53 @@ namespace CargoClash.Gameplay.Cargo
             originSlot = null;
 
             previousSlot.NotifyCargoRemoved(this);
+        }
+
+        public void SetCarried(
+            CargoCarrier newCarrier,
+            Transform carryPoint)
+        {
+            carrier = newCarrier;
+
+            if (cargoCollider != null)
+            {
+                cargoCollider.enabled = false;
+            }
+
+            if (cargoRigidbody != null)
+            {
+                cargoRigidbody.isKinematic = true;
+                cargoRigidbody.useGravity = false;
+            }
+
+            Transform targetParent =
+                carryPoint != null
+                    ? carryPoint
+                    : newCarrier.transform;
+
+            transform.SetParent(targetParent);
+            transform.localPosition = Vector3.zero;
+            transform.localRotation = Quaternion.identity;
+        }
+
+        public void SetDropped(Vector3 worldPosition)
+        {
+            carrier = null;
+
+            transform.SetParent(null);
+            transform.position = worldPosition;
+            transform.rotation = Quaternion.identity;
+
+            if (cargoCollider != null)
+            {
+                cargoCollider.enabled = true;
+            }
+
+            if (cargoRigidbody != null)
+            {
+                cargoRigidbody.isKinematic = true;
+                cargoRigidbody.useGravity = false;
+            }
         }
     }
 }
