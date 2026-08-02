@@ -204,6 +204,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7394434214751985698, guid: 80a3fcaf7a8d99f4bb8ca2f8152d8e51, type: 3}
   m_PrefabInstance: {fileID: 5225632305302112661}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &310963494 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3078557802807398884, guid: e19825f352aeef043acd7d916f011234, type: 3}
+  m_PrefabInstance: {fileID: 7637649977693122113}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -517,6 +522,33 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6530927735444729887, guid: e19825f352aeef043acd7d916f011234, type: 3}
   m_PrefabInstance: {fileID: 7637649977693122113}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &565329977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 310963494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23363d48ad2c76943b49e74069553660, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.Cargo.CargoDeliveryController
+  ownBase: {fileID: 786609105}
+  scoreManager: {fileID: 1484083096}
+--- !u!114 &565329978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 310963494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4d84300c765ec540b51905917df295c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.PlayerIdentity
+  side: 0
 --- !u!1 &611129252
 GameObject:
   m_ObjectHideFlags: 0
@@ -551,6 +583,113 @@ Transform:
   - {fileID: 243669219}
   m_Father: {fileID: 1623474177}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &786609103
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 786609104}
+  - component: {fileID: 786609107}
+  - component: {fileID: 786609106}
+  - component: {fileID: 786609105}
+  m_Layer: 0
+  m_Name: PlayerBase
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &786609104
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 786609103}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3, y: 0.03, z: 10}
+  m_LocalScale: {x: 3, y: 0.06, z: 3}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1726715754}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &786609105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 786609103}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56169f91f7aee8d428af3840e5a2e26d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.BaseZone
+  owner: 0
+  centerCell: {x: 3, y: 10}
+  halfWidth: 1
+  halfHeight: 1
+--- !u!23 &786609106
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 786609103}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 846e0e77eefe29e49a09d235e3f2b42e, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &786609107
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 786609103}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &822759453
 GameObject:
   m_ObjectHideFlags: 0
@@ -696,6 +835,113 @@ MonoBehaviour:
   spawnOnStart: 1
   respawnDelay: 3
   cargoHeight: 0.35
+--- !u!1 &969425005
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 969425006}
+  - component: {fileID: 969425009}
+  - component: {fileID: 969425008}
+  - component: {fileID: 969425007}
+  m_Layer: 0
+  m_Name: OpponentBase
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &969425006
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 969425005}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 16, y: 0.03, z: 10}
+  m_LocalScale: {x: 3, y: 0.06, z: 3}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1726715754}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &969425007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 969425005}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56169f91f7aee8d428af3840e5a2e26d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.BaseZone
+  owner: 1
+  centerCell: {x: 16, y: 10}
+  halfWidth: 1
+  halfHeight: 1
+--- !u!23 &969425008
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 969425005}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a2e661ee7acc2d6449e6d371e4adc2f5, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &969425009
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 969425005}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1086248717
 GameObject:
   m_ObjectHideFlags: 0
@@ -839,6 +1085,52 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1623474177}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1484083094
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1484083095}
+  - component: {fileID: 1484083096}
+  m_Layer: 0
+  m_Name: MatchScore
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1484083095
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1484083094}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1623474177}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1484083096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1484083094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d6eecdefef16f42b33f5e071e40fe7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.MatchScoreManager
+  playerScore: 0
+  opponentScore: 0
 --- !u!1 &1589092054
 GameObject:
   m_ObjectHideFlags: 0
@@ -927,6 +1219,7 @@ Transform:
   - {fileID: 282366218}
   - {fileID: 338350675}
   - {fileID: 1975268771}
+  - {fileID: 1484083095}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1726715753
@@ -957,7 +1250,9 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 786609104}
+  - {fileID: 969425006}
   m_Father: {fileID: 1623474177}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1975268770
@@ -1008,6 +1303,38 @@ MonoBehaviour:
   maximumCell: {x: 19, y: 19}
   mapGenerator: {fileID: 822759455}
   occupancyManager: {fileID: 338350676}
+--- !u!1 &2032954831 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1622974352518742489, guid: 80a3fcaf7a8d99f4bb8ca2f8152d8e51, type: 3}
+  m_PrefabInstance: {fileID: 5225632305302112661}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2032954840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2032954831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4d84300c765ec540b51905917df295c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.PlayerIdentity
+  side: 1
+--- !u!114 &2032954841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2032954831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23363d48ad2c76943b49e74069553660, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.Cargo.CargoDeliveryController
+  ownBase: {fileID: 969425007}
+  scoreManager: {fileID: 1484083096}
 --- !u!1001 &5225632305302112661
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1067,7 +1394,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1622974352518742489, guid: 80a3fcaf7a8d99f4bb8ca2f8152d8e51, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2032954840}
+    - targetCorrespondingSourceObject: {fileID: 1622974352518742489, guid: 80a3fcaf7a8d99f4bb8ca2f8152d8e51, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2032954841}
   m_SourcePrefab: {fileID: 100100000, guid: 80a3fcaf7a8d99f4bb8ca2f8152d8e51, type: 3}
 --- !u!1001 &7637649977693122113
 PrefabInstance:
@@ -1130,7 +1463,13 @@ PrefabInstance:
     - {fileID: 5702866975046325611, guid: e19825f352aeef043acd7d916f011234, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3078557802807398884, guid: e19825f352aeef043acd7d916f011234, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 565329978}
+    - targetCorrespondingSourceObject: {fileID: 3078557802807398884, guid: e19825f352aeef043acd7d916f011234, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 565329977}
   m_SourcePrefab: {fileID: 100100000, guid: e19825f352aeef043acd7d916f011234, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

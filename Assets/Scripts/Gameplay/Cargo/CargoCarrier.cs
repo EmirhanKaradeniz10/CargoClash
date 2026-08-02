@@ -54,6 +54,8 @@ namespace CargoClash.Gameplay.Cargo
             CargoItem removedCargo = carriedCargo;
             carriedCargo = null;
 
+            removedCargo.DetachFromCarrier();
+
             return removedCargo;
         }
     }

@@ -79,6 +79,12 @@ namespace CargoClash.Gameplay.Cargo
             transform.localRotation = Quaternion.identity;
         }
 
+        public void DetachFromCarrier()
+        {
+            carrier = null;
+            transform.SetParent(null);
+        }
+
         public void SetDropped(Vector3 worldPosition)
         {
             carrier = null;
