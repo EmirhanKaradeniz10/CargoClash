@@ -11,7 +11,20 @@ namespace CargoClash.Gameplay.Cargo
 
         [Header("Spawn")]
         [SerializeField]
-        private CargoItem cargoPrefab;
+        private CargoItem normalCargoPrefab;
+
+        [SerializeField]
+        private CargoItem heavyCargoPrefab;
+
+        [SerializeField]
+        private CargoItem rareCargoPrefab;
+
+        [Header("Spawn Probabilities")]
+        [SerializeField, Range(0f, 1f)]
+        private float normalProbability = 0.6f;
+
+        [SerializeField, Range(0f, 1f)]
+        private float heavyProbability = 0.3f;
 
         [SerializeField]
         private bool spawnOnStart = true;
@@ -47,10 +60,12 @@ namespace CargoClash.Gameplay.Cargo
                 return;
             }
 
-            if (cargoPrefab == null)
+            if (normalCargoPrefab == null ||
+                        heavyCargoPrefab == null ||
+                        rareCargoPrefab == null)
             {
                 Debug.LogError(
-                    $"Cargo prefab is not assigned on {name}.",
+                    $"One or more cargo prefabs are not assigned on {name}.",
                     this);
 
                 return;
@@ -61,14 +76,16 @@ namespace CargoClash.Gameplay.Cargo
                 cargoHeight,
                 cell.y);
 
+            CargoItem selectedPrefab = SelectCargoPrefab();
+
             currentCargo = Instantiate(
-                cargoPrefab,
+                selectedPrefab,
                 spawnPosition,
                 Quaternion.identity,
                 transform);
 
             currentCargo.name =
-                $"{cargoPrefab.name}_{cell.x}_{cell.y}";
+                $"{selectedPrefab.name}_{cell.x}_{cell.y}";
 
             currentCargo.Initialize(this);
         }
@@ -99,6 +116,24 @@ namespace CargoClash.Gameplay.Cargo
             SpawnCargo();
         }
 
+        private CargoItem SelectCargoPrefab()
+        {
+            float randomValue = Random.value;
+
+            if (randomValue < normalProbability)
+            {
+                return normalCargoPrefab;
+            }
+
+            if (randomValue <
+                normalProbability + heavyProbability)
+            {
+                return heavyCargoPrefab;
+            }
+
+            return rareCargoPrefab;
+        }
+
         private void OnDrawGizmosSelected()
         {
             Vector3 center = new(
@@ -109,6 +144,18 @@ namespace CargoClash.Gameplay.Cargo
             Gizmos.DrawWireCube(
                 center,
                 new Vector3(1f, 0.1f, 1f));
+        }
+
+        private void OnValidate()
+        {
+            normalProbability =
+                Mathf.Clamp01(normalProbability);
+
+            heavyProbability =
+                Mathf.Clamp(
+                    heavyProbability,
+                    0f,
+                    1f - normalProbability);
         }
     }
 }

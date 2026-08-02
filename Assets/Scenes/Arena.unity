@@ -195,10 +195,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.Cargo.CargoSpawnSlot
   cell: {x: 9, y: 6}
-  cargoPrefab: {fileID: 6021799232154791835, guid: 2c5b7923b5bbf034c97624fc9317db0e, type: 3}
+  normalCargoPrefab: {fileID: 6021799232154791835, guid: 2c5b7923b5bbf034c97624fc9317db0e, type: 3}
+  heavyCargoPrefab: {fileID: 6021799232154791835, guid: 33e6795048f86cb49a505a8d4ad07a2d, type: 3}
+  rareCargoPrefab: {fileID: 6021799232154791835, guid: 90081b3d48167114ea1e42e102da0e0e, type: 3}
+  normalProbability: 0.6
+  heavyProbability: 0.3
   spawnOnStart: 1
   respawnDelay: 3
-  cargoHeight: 0.35
+  cargoHeight: 0.4
 --- !u!4 &282366218 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7394434214751985698, guid: 80a3fcaf7a8d99f4bb8ca2f8152d8e51, type: 3}
@@ -799,10 +803,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.Cargo.CargoSpawnSlot
   cell: {x: 13, y: 13}
-  cargoPrefab: {fileID: 6021799232154791835, guid: 2c5b7923b5bbf034c97624fc9317db0e, type: 3}
+  normalCargoPrefab: {fileID: 6021799232154791835, guid: 2c5b7923b5bbf034c97624fc9317db0e, type: 3}
+  heavyCargoPrefab: {fileID: 6021799232154791835, guid: 33e6795048f86cb49a505a8d4ad07a2d, type: 3}
+  rareCargoPrefab: {fileID: 6021799232154791835, guid: 90081b3d48167114ea1e42e102da0e0e, type: 3}
+  normalProbability: 0.6
+  heavyProbability: 0.3
   spawnOnStart: 1
   respawnDelay: 3
-  cargoHeight: 0.35
+  cargoHeight: 0.4
 --- !u!1 &969425005
 GameObject:
   m_ObjectHideFlags: 0
@@ -1144,10 +1152,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.Cargo.CargoSpawnSlot
   cell: {x: 6, y: 13}
-  cargoPrefab: {fileID: 6021799232154791835, guid: 2c5b7923b5bbf034c97624fc9317db0e, type: 3}
+  normalCargoPrefab: {fileID: 6021799232154791835, guid: 2c5b7923b5bbf034c97624fc9317db0e, type: 3}
+  heavyCargoPrefab: {fileID: 6021799232154791835, guid: 33e6795048f86cb49a505a8d4ad07a2d, type: 3}
+  rareCargoPrefab: {fileID: 6021799232154791835, guid: 90081b3d48167114ea1e42e102da0e0e, type: 3}
+  normalProbability: 0.6
+  heavyProbability: 0.3
   spawnOnStart: 1
   respawnDelay: 3
-  cargoHeight: 0.35
+  cargoHeight: 0.4
 --- !u!1 &1623474176
 GameObject:
   m_ObjectHideFlags: 0

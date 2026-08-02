@@ -28,13 +28,6 @@ namespace CargoClash.Movement
         [SerializeField]
         private BaseZone ownBase;
 
-        [Header("Debug")]
-        [SerializeField]
-        private GameObject targetMarkerPrefab;
-
-        [SerializeField, Min(0f)]
-        private float targetMarkerHeight = 0.05f;
-
         private GridMovementController movementController;
         private CargoCarrier cargoCarrier;
         private PlayerIdentity playerIdentity;
@@ -129,10 +122,6 @@ namespace CargoClash.Movement
                 case BotGoal.OwnBase:
                     SelectOwnBaseTarget();
                     break;
-
-                default:
-                    HideTargetMarker();
-                    break;
             }
         }
 
@@ -177,7 +166,6 @@ namespace CargoClash.Movement
             {
                 currentGoal = BotGoal.None;
                 targetCargoSlot = null;
-                HideTargetMarker();
                 return;
             }
 
@@ -186,7 +174,7 @@ namespace CargoClash.Movement
             currentPath = bestPath;
             pathIndex = 0;
 
-            UpdateTargetMarker(bestSlot.Cell);
+
         }
 
         private void SelectOwnBaseTarget()
@@ -194,19 +182,15 @@ namespace CargoClash.Movement
             if (ownBase == null)
             {
                 currentGoal = BotGoal.None;
-                HideTargetMarker();
                 return;
             }
 
-            Vector2Int baseCell =
-                ownBase.CenterCell;
+            Vector2Int baseCell = ownBase.CenterCell;
 
-            if (ownBase.Contains(
-                    movementController.CurrentCell))
+            if (ownBase.Contains(movementController.CurrentCell))
             {
                 currentGoal = BotGoal.OwnBase;
                 targetCargoSlot = null;
-                HideTargetMarker();
                 return;
             }
 
@@ -219,7 +203,6 @@ namespace CargoClash.Movement
             if (path.Count == 0)
             {
                 currentGoal = BotGoal.None;
-                HideTargetMarker();
                 return;
             }
 
@@ -227,8 +210,6 @@ namespace CargoClash.Movement
             targetCargoSlot = null;
             currentPath = path;
             pathIndex = 0;
-
-            UpdateTargetMarker(baseCell);
         }
 
         private bool IsCurrentGoalValid()
@@ -326,48 +307,6 @@ namespace CargoClash.Movement
         {
             nextDecisionTime =
                 Time.time + decisionDelay;
-        }
-
-        private void UpdateTargetMarker(
-            Vector2Int targetCell)
-        {
-            if (targetMarkerPrefab == null)
-            {
-                return;
-            }
-
-            if (targetMarkerInstance == null)
-            {
-                targetMarkerInstance =
-                    Instantiate(targetMarkerPrefab);
-
-                targetMarkerInstance.name =
-                    $"{name}_TargetMarker";
-            }
-
-            targetMarkerInstance.transform.position =
-                new Vector3(
-                    targetCell.x,
-                    targetMarkerHeight,
-                    targetCell.y);
-
-            targetMarkerInstance.SetActive(true);
-        }
-
-        private void HideTargetMarker()
-        {
-            if (targetMarkerInstance != null)
-            {
-                targetMarkerInstance.SetActive(false);
-            }
-        }
-
-        private void OnDestroy()
-        {
-            if (targetMarkerInstance != null)
-            {
-                Destroy(targetMarkerInstance);
-            }
         }
     }
 }
