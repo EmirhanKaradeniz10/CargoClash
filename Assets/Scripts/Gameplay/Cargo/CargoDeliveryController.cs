@@ -88,9 +88,10 @@ namespace CargoClash.Gameplay.Cargo
             }
 
             scoreManager.AddScore(
-                playerIdentity.Side,
-                deliveredCargo.ScoreValue);
+                    playerIdentity.Side,
+                    deliveredCargo.ScoreValue);
 
+            deliveredCargo.NotifyDelivered();
             Destroy(deliveredCargo.gameObject);
         }
 

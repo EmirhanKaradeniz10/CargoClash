@@ -12,10 +12,13 @@ namespace CargoClash.Gameplay.Cargo
         private int scoreValue = 10;
 
         private CargoSpawnSlot originSlot;
+        private CargoSpawnManager spawnManager;
         private CargoCarrier carrier;
 
         private Collider cargoCollider;
         private Rigidbody cargoRigidbody;
+
+        private bool isRegistered;
 
         public CargoType CargoType => cargoType;
 
@@ -33,10 +36,14 @@ namespace CargoClash.Gameplay.Cargo
             cargoRigidbody = GetComponent<Rigidbody>();
         }
 
-        public void Initialize(CargoSpawnSlot spawnSlot)
+        public void Initialize(
+            CargoSpawnSlot slot,
+            CargoSpawnManager manager)
         {
-            originSlot = spawnSlot;
+            originSlot = slot;
+            spawnManager = manager;
             carrier = null;
+            isRegistered = true;
         }
 
         public void RemoveFromSlot()
@@ -79,12 +86,6 @@ namespace CargoClash.Gameplay.Cargo
             transform.localRotation = Quaternion.identity;
         }
 
-        public void DetachFromCarrier()
-        {
-            carrier = null;
-            transform.SetParent(null);
-        }
-
         public void SetDropped(Vector3 worldPosition)
         {
             carrier = null;
@@ -103,6 +104,34 @@ namespace CargoClash.Gameplay.Cargo
                 cargoRigidbody.isKinematic = true;
                 cargoRigidbody.useGravity = false;
             }
+        }
+
+        public void DetachFromCarrier()
+        {
+            carrier = null;
+            transform.SetParent(null);
+        }
+
+        public void NotifyDelivered()
+        {
+            if (!isRegistered)
+            {
+                return;
+            }
+
+            isRegistered = false;
+            spawnManager?.UnregisterCargo(this);
+        }
+
+        private void OnDestroy()
+        {
+            if (!isRegistered)
+            {
+                return;
+            }
+
+            isRegistered = false;
+            spawnManager?.UnregisterCargo(this);
         }
     }
 }
