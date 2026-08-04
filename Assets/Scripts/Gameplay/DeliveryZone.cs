@@ -158,7 +158,7 @@ namespace CargoClash.Gameplay
             }
             else
             {
-                scoreMultiplier = 1.5f;
+                scoreMultiplier = 1f;
                 providesCoolingBonus = false;
             }
         }

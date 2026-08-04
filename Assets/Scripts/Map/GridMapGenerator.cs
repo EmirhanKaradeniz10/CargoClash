@@ -48,10 +48,9 @@ namespace CargoClash.Map
             new(7, 15), new(8, 15), new(11, 15), new(12, 15),
             new(7, 14), new(8, 14), new(11, 14), new(12, 14),
 
-            // Merkez raflar
-            new(9, 11), new(10, 11),
-            new(9, 10), new(10, 10),
-            new(9, 9), new(10, 9),
+            // Merkez kavşak rafları
+            new(8, 11), new(11, 11),
+            new(8, 9),  new(11, 9),
 
             // Alt orta raflar
             new(7, 7), new(8, 7), new(11, 7), new(12, 7),
