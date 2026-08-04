@@ -2,11 +2,6 @@ using UnityEngine;
 
 namespace CargoClash.Gameplay
 {
-    public enum PlayerSide
-    {
-        Player,
-        Opponent
-    }
 
     public sealed class BaseZone : MonoBehaviour
     {

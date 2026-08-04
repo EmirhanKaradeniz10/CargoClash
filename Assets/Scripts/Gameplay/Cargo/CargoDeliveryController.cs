@@ -1,9 +1,6 @@
 using CargoClash.Movement;
 using UnityEngine;
 
-using CargoClash.Gameplay;
-
-
 namespace CargoClash.Gameplay.Cargo
 {
     [RequireComponent(typeof(CargoCarrier))]
@@ -11,9 +8,14 @@ namespace CargoClash.Gameplay.Cargo
     [RequireComponent(typeof(GridMovementController))]
     public sealed class CargoDeliveryController : MonoBehaviour
     {
+        [Header("Delivery Zones")]
         [SerializeField]
-        private BaseZone ownBase;
+        private DeliveryZone homeDeliveryZone;
 
+        [SerializeField]
+        private DeliveryZone forwardDeliveryZone;
+
+        [Header("Score")]
         [SerializeField]
         private MatchScoreManager scoreManager;
 
@@ -36,12 +38,10 @@ namespace CargoClash.Gameplay.Cargo
                     FindAnyObjectByType<MatchScoreManager>();
             }
 
-            if (ownBase == null)
-            {
-                FindOwnBase();
-            }
+            FindOwnDeliveryZones();
 
-            lastCheckedCell = movementController.CurrentCell;
+            lastCheckedCell =
+                movementController.CurrentCell;
         }
 
         private void Start()
@@ -67,14 +67,18 @@ namespace CargoClash.Gameplay.Cargo
         private void TryDeliverCargo()
         {
             if (!cargoCarrier.IsCarrying ||
-                ownBase == null ||
                 scoreManager == null)
             {
                 return;
             }
 
-            if (!ownBase.Contains(
-                    movementController.CurrentCell))
+            Vector2Int currentCell =
+                movementController.CurrentCell;
+
+            DeliveryZone reachedZone =
+                GetReachedDeliveryZone(currentCell);
+
+            if (reachedZone == null)
             {
                 return;
             }
@@ -87,40 +91,103 @@ namespace CargoClash.Gameplay.Cargo
                 return;
             }
 
+            int awardedScore =
+                CalculateDeliveryScore(
+                    deliveredCargo.ScoreValue,
+                    reachedZone.ScoreMultiplier);
+
             scoreManager.AddScore(
-                    playerIdentity.Side,
-                    deliveredCargo.ScoreValue);
+                playerIdentity.Side,
+                awardedScore);
+
+            Debug.Log(
+                $"{playerIdentity.Side} delivered " +
+                $"{deliveredCargo.CargoType} cargo to " +
+                $"{reachedZone.ZoneType}. " +
+                $"Base score: {deliveredCargo.ScoreValue}, " +
+                $"Multiplier: {reachedZone.ScoreMultiplier}, " +
+                $"Awarded score: {awardedScore}.",
+                this);
 
             deliveredCargo.NotifyDelivered();
             Destroy(deliveredCargo.gameObject);
         }
 
-        private void FindOwnBase()
+        private DeliveryZone GetReachedDeliveryZone(
+            Vector2Int currentCell)
         {
-            BaseZone[] baseZones =
-                    FindObjectsByType<BaseZone>();
-
-            foreach (BaseZone baseZone in baseZones)
+            if (homeDeliveryZone != null &&
+                homeDeliveryZone.IsInDeliveryRange(
+                    currentCell))
             {
-                if (baseZone.Owner == playerIdentity.Side)
+                return homeDeliveryZone;
+            }
+
+            if (forwardDeliveryZone != null &&
+                forwardDeliveryZone.IsInDeliveryRange(
+                    currentCell))
+            {
+                return forwardDeliveryZone;
+            }
+
+            return null;
+        }
+
+        private static int CalculateDeliveryScore(
+            int baseScore,
+            float multiplier)
+        {
+            return Mathf.RoundToInt(
+                baseScore * multiplier);
+        }
+
+        private void FindOwnDeliveryZones()
+        {
+            DeliveryZone[] deliveryZones =
+                    FindObjectsByType<DeliveryZone>();
+
+            foreach (DeliveryZone zone in deliveryZones)
+            {
+                if (zone.Owner != playerIdentity.Side)
                 {
-                    ownBase = baseZone;
-                    return;
+                    continue;
+                }
+
+                switch (zone.ZoneType)
+                {
+                    case DeliveryZoneType.Home:
+                        homeDeliveryZone = zone;
+                        break;
+
+                    case DeliveryZoneType.Forward:
+                        forwardDeliveryZone = zone;
+                        break;
                 }
             }
         }
 
         private void ValidateDependencies()
         {
-            if (ownBase == null)
+            bool hasError = false;
+
+            if (homeDeliveryZone == null)
             {
                 Debug.LogError(
-                    $"Base zone was not found for " +
+                    $"Home DeliveryZone was not found for " +
                     $"{playerIdentity.Side}.",
                     this);
 
-                enabled = false;
-                return;
+                hasError = true;
+            }
+
+            if (forwardDeliveryZone == null)
+            {
+                Debug.LogError(
+                    $"Forward DeliveryZone was not found for " +
+                    $"{playerIdentity.Side}.",
+                    this);
+
+                hasError = true;
             }
 
             if (scoreManager == null)
@@ -129,6 +196,11 @@ namespace CargoClash.Gameplay.Cargo
                     "MatchScoreManager was not found.",
                     this);
 
+                hasError = true;
+            }
+
+            if (hasError)
+            {
                 enabled = false;
             }
         }

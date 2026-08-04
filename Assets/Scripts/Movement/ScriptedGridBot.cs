@@ -14,8 +14,17 @@ namespace CargoClash.Movement
         {
             None,
             Cargo,
-            OwnBase
+            HomeDelivery
         }
+
+        private static readonly Vector2Int[] CardinalDirections =
+        {
+            Vector2Int.zero,
+            Vector2Int.up,
+            Vector2Int.down,
+            Vector2Int.left,
+            Vector2Int.right
+        };
 
         [Header("Decision Timing")]
         [SerializeField, Min(0.05f)]
@@ -26,7 +35,7 @@ namespace CargoClash.Movement
         private GridPathfinder pathfinder;
 
         [SerializeField]
-        private BaseZone ownBase;
+        private DeliveryZone homeDeliveryZone;
 
         private GridMovementController movementController;
         private CargoCarrier cargoCarrier;
@@ -39,8 +48,6 @@ namespace CargoClash.Movement
 
         private BotGoal currentGoal = BotGoal.None;
         private float nextDecisionTime;
-
-        private GameObject targetMarkerInstance;
 
         private void Awake()
         {
@@ -59,9 +66,9 @@ namespace CargoClash.Movement
                     FindAnyObjectByType<GridPathfinder>();
             }
 
-            if (ownBase == null)
+            if (homeDeliveryZone == null)
             {
-                FindOwnBase();
+                FindHomeDeliveryZone();
             }
         }
 
@@ -86,7 +93,7 @@ namespace CargoClash.Movement
 
             BotGoal desiredGoal =
                 cargoCarrier.IsCarrying
-                    ? BotGoal.OwnBase
+                    ? BotGoal.HomeDelivery
                     : BotGoal.Cargo;
 
             bool goalChanged =
@@ -119,8 +126,12 @@ namespace CargoClash.Movement
                     SelectCargoTarget();
                     break;
 
-                case BotGoal.OwnBase:
-                    SelectOwnBaseTarget();
+                case BotGoal.HomeDelivery:
+                    SelectHomeDeliveryTarget();
+                    break;
+
+                default:
+                    currentGoal = BotGoal.None;
                     break;
             }
         }
@@ -173,42 +184,66 @@ namespace CargoClash.Movement
             targetCargoSlot = bestSlot;
             currentPath = bestPath;
             pathIndex = 0;
-
-
         }
 
-        private void SelectOwnBaseTarget()
+        private void SelectHomeDeliveryTarget()
         {
-            if (ownBase == null)
+            if (homeDeliveryZone == null)
             {
                 currentGoal = BotGoal.None;
                 return;
             }
 
-            Vector2Int baseCell = ownBase.CenterCell;
+            Vector2Int currentCell =
+                movementController.CurrentCell;
 
-            if (ownBase.Contains(movementController.CurrentCell))
+            if (homeDeliveryZone.IsInDeliveryRange(currentCell))
             {
-                currentGoal = BotGoal.OwnBase;
+                currentGoal = BotGoal.HomeDelivery;
                 targetCargoSlot = null;
                 return;
             }
 
-            List<Vector2Int> path =
-                pathfinder.FindPath(
-                    movementController.CurrentCell,
-                    baseCell,
-                    movementController);
+            List<Vector2Int> bestPath = null;
 
-            if (path.Count == 0)
+            foreach (Vector2Int offset in CardinalDirections)
+            {
+                Vector2Int candidateCell =
+                    homeDeliveryZone.CenterCell + offset;
+
+                if (!homeDeliveryZone.IsInDeliveryRange(
+                        candidateCell))
+                {
+                    continue;
+                }
+
+                List<Vector2Int> candidatePath =
+                    pathfinder.FindPath(
+                        currentCell,
+                        candidateCell,
+                        movementController);
+
+                if (candidatePath.Count == 0)
+                {
+                    continue;
+                }
+
+                if (bestPath == null ||
+                    candidatePath.Count < bestPath.Count)
+                {
+                    bestPath = candidatePath;
+                }
+            }
+
+            if (bestPath == null)
             {
                 currentGoal = BotGoal.None;
                 return;
             }
 
-            currentGoal = BotGoal.OwnBase;
+            currentGoal = BotGoal.HomeDelivery;
             targetCargoSlot = null;
-            currentPath = path;
+            currentPath = bestPath;
             pathIndex = 0;
         }
 
@@ -223,9 +258,9 @@ namespace CargoClash.Movement
                            targetCargoSlot.CurrentCargo != null &&
                            !targetCargoSlot.CurrentCargo.IsCarried;
 
-                case BotGoal.OwnBase:
+                case BotGoal.HomeDelivery:
                     return cargoCarrier.IsCarrying &&
-                           ownBase != null;
+                           homeDeliveryZone != null;
 
                 default:
                     return false;
@@ -252,24 +287,27 @@ namespace CargoClash.Movement
                 return;
             }
 
-            // Oyuncu veya başka bir durum yolu kapattı.
-            // Aynı hedef için bir sonraki kararda rota yeniden hesaplanır.
-            currentPath.Clear();
-            pathIndex = 0;
+            // Yol geçici olarak kapandı.
+            // Sonraki karar döngüsünde aynı hedef için
+            // yeniden rota hesaplanır.
+            ClearCurrentPath();
         }
 
-        private void FindOwnBase()
+        private void FindHomeDeliveryZone()
         {
-            BaseZone[] baseZones =
-                FindObjectsByType<BaseZone>();
+            DeliveryZone[] deliveryZones =
+                FindObjectsByType<DeliveryZone>();
 
-            foreach (BaseZone baseZone in baseZones)
+            foreach (DeliveryZone zone in deliveryZones)
             {
-                if (baseZone.Owner == playerIdentity.Side)
+                if (zone.Owner != playerIdentity.Side ||
+                    zone.ZoneType != DeliveryZoneType.Home)
                 {
-                    ownBase = baseZone;
-                    return;
+                    continue;
                 }
+
+                homeDeliveryZone = zone;
+                return;
             }
         }
 
@@ -284,10 +322,10 @@ namespace CargoClash.Movement
                 return false;
             }
 
-            if (ownBase == null)
+            if (homeDeliveryZone == null)
             {
                 Debug.LogError(
-                    $"BaseZone was not found for " +
+                    $"Home DeliveryZone was not found for " +
                     $"{playerIdentity.Side}.",
                     this);
 

@@ -29,17 +29,23 @@ namespace CargoClash.Gameplay.Cargo
 
         [Header("Spawn Limits")]
         [SerializeField, Min(1)]
-        private int targetActiveSlotCount = 3;
+        private int targetActiveSlotCount = 4;
 
         [SerializeField, Min(1)]
         private int maximumUndeliveredCargo = 6;
 
         [Header("Spawn Timing")]
         [SerializeField, Min(0f)]
-        private float minimumSpawnDelay = 3f;
+        private float urgentSpawnDelay = 0f;
 
         [SerializeField, Min(0f)]
-        private float maximumSpawnDelay = 5f;
+        private float minimumNormalSpawnDelay = 0.3f;
+
+        [SerializeField, Min(0f)]
+        private float maximumNormalSpawnDelay = 0.8f;
+
+        [SerializeField, Min(0)]
+        private int minimumActiveSlotCount = 3;
 
         private readonly HashSet<CargoItem> undeliveredCargo = new();
 
@@ -89,22 +95,28 @@ namespace CargoClash.Gameplay.Cargo
 
         private void ScheduleRefill()
         {
-            if (refillCoroutine != null)
+            if (refillCoroutine != null || !CanSpawnMore())
             {
                 return;
             }
 
+            float delay =
+                CountActiveSlots() < minimumActiveSlotCount
+                    ? urgentSpawnDelay
+                    : Random.Range(
+                        minimumNormalSpawnDelay,
+                        maximumNormalSpawnDelay);
+
             refillCoroutine =
-                StartCoroutine(RefillRoutine());
+                StartCoroutine(RefillRoutine(delay));
         }
 
-        private IEnumerator RefillRoutine()
+        private IEnumerator RefillRoutine(float delay)
         {
-            float delay = Random.Range(
-                minimumSpawnDelay,
-                maximumSpawnDelay);
-
-            yield return new WaitForSeconds(delay);
+            if (delay > 0f)
+            {
+                yield return new WaitForSeconds(delay);
+            }
 
             refillCoroutine = null;
 
@@ -252,9 +264,18 @@ namespace CargoClash.Gameplay.Cargo
                     0f,
                     1f - normalProbability);
 
-            if (maximumSpawnDelay < minimumSpawnDelay)
+            if (maximumNormalSpawnDelay <
+                minimumNormalSpawnDelay)
             {
-                maximumSpawnDelay = minimumSpawnDelay;
+                maximumNormalSpawnDelay =
+                    minimumNormalSpawnDelay;
+            }
+
+            if (minimumActiveSlotCount >
+                targetActiveSlotCount)
+            {
+                minimumActiveSlotCount =
+                    targetActiveSlotCount;
             }
 
             if (maximumUndeliveredCargo <
