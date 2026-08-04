@@ -147,10 +147,16 @@ namespace CargoClash.Map
                    cell.y < GridHeight;
         }
 
+        public IEnumerable<Vector2Int> GetBlockedCells()
+        {
+            return BlockedCellSet;
+        }
+
         public bool IsBlocked(Vector2Int cell)
         {
             return BlockedCellSet.Contains(cell);
         }
+
 
         public bool IsWalkable(Vector2Int cell)
         {

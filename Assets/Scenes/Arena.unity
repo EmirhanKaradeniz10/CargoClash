@@ -525,7 +525,7 @@ MonoBehaviour:
   zoneType: 1
   centerCell: {x: 13, y: 10}
   deliveryRange: 1
-  scoreMultiplier: 1.5
+  scoreMultiplier: 1
   providesCoolingBonus: 0
   mapGenerator: {fileID: 822759455}
 --- !u!4 &24715417
@@ -12233,7 +12233,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d6d888298850b14bb2b3ecdf72ea843, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.Cargo.CargoSpawnSlot
-  cell: {x: 4, y: 15}
+  cell: {x: 6, y: 16}
   cargoHeight: 0.4
 --- !u!4 &530770008
 Transform:
@@ -12244,7 +12244,7 @@ Transform:
   m_GameObject: {fileID: 530770006}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 6, y: 0, z: 16}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -19013,7 +19013,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d6d888298850b14bb2b3ecdf72ea843, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.Cargo.CargoSpawnSlot
-  cell: {x: 5, y: 9}
+  cell: {x: 7, y: 2}
   cargoHeight: 0.4
 --- !u!4 &761055480
 Transform:
@@ -19024,7 +19024,7 @@ Transform:
   m_GameObject: {fileID: 761055478}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 7, y: 0, z: 2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -20779,7 +20779,7 @@ MonoBehaviour:
   zoneType: 1
   centerCell: {x: 6, y: 10}
   deliveryRange: 1
-  scoreMultiplier: 1.5
+  scoreMultiplier: 1
   providesCoolingBonus: 0
   mapGenerator: {fileID: 822759455}
 --- !u!4 &820139383
@@ -33177,7 +33177,7 @@ Transform:
   m_GameObject: {fileID: 1354860994}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 15, y: 0, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -35160,7 +35160,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d6d888298850b14bb2b3ecdf72ea843, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.Cargo.CargoSpawnSlot
-  cell: {x: 14, y: 9}
+  cell: {x: 12, y: 2}
   cargoHeight: 0.4
 --- !u!4 &1491104490
 Transform:
@@ -35171,7 +35171,7 @@ Transform:
   m_GameObject: {fileID: 1491104488}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 12, y: 0, z: 2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -38325,6 +38325,7 @@ Transform:
   - {fileID: 1975268771}
   - {fileID: 1484083095}
   - {fileID: 514229243}
+  - {fileID: 2124408645}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1624940421
@@ -44563,7 +44564,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d6d888298850b14bb2b3ecdf72ea843, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.Cargo.CargoSpawnSlot
-  cell: {x: 15, y: 15}
+  cell: {x: 13, y: 16}
   cargoHeight: 0.4
 --- !u!4 &1896860424
 Transform:
@@ -44574,7 +44575,7 @@ Transform:
   m_GameObject: {fileID: 1896860422}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 13, y: 0, z: 16}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -45142,7 +45143,7 @@ Transform:
   m_GameObject: {fileID: 1928566303}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 4, y: 0, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -49897,6 +49898,55 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2123408261}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &2124408644
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2124408645}
+  - component: {fileID: 2124408646}
+  m_Layer: 0
+  m_Name: ArenaLayoutValidator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2124408645
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2124408644}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1623474177}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2124408646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2124408644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95abe8fbd54476e408a8dd0fbce0308a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Map.ArenaLayoutValidator
+  mapGenerator: {fileID: 822759455}
+  minimumWalkableApproachCells: 3
+  preferredSpawnZoneDistance: 3
+  requireMirrorSymmetry: 1
+  validateOnStart: 1
 --- !u!1 &2126983935
 GameObject:
   m_ObjectHideFlags: 0
