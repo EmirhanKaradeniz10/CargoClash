@@ -9,10 +9,22 @@ namespace CargoClash.Gameplay.Cargo
 
         private void Awake()
         {
-            cargoCarrier = GetComponent<CargoCarrier>();
+            cargoCarrier =
+                GetComponent<CargoCarrier>();
         }
 
         private void OnTriggerEnter(Collider other)
+        {
+            TryPickUpFromCollider(other);
+        }
+
+        private void OnTriggerStay(Collider other)
+        {
+            TryPickUpFromCollider(other);
+        }
+
+        private void TryPickUpFromCollider(
+            Collider other)
         {
             if (cargoCarrier.IsCarrying)
             {
@@ -22,7 +34,9 @@ namespace CargoClash.Gameplay.Cargo
             CargoItem cargo =
                 other.GetComponent<CargoItem>();
 
-            if (cargo == null || cargo.IsCarried)
+            if (cargo == null ||
+                cargo.IsCarried ||
+                !cargo.CanBePickedUpBy(cargoCarrier))
             {
                 return;
             }

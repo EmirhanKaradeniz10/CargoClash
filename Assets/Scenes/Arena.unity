@@ -19365,17 +19365,36 @@ Transform:
   - {fileID: 1151447754}
   m_Father: {fileID: 84060434}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &783676737 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3078557802807398884, guid: e19825f352aeef043acd7d916f011234, type: 3}
+  m_PrefabInstance: {fileID: 7637649977693122113}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &783676744 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5059686343740330512, guid: e19825f352aeef043acd7d916f011234, type: 3}
   m_PrefabInstance: {fileID: 7637649977693122113}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 783676737}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f51595bef00ffb842a1ac63f713583fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Movement.GridMovementController
+--- !u!114 &783676748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 783676737}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f63b13a09fe31f94e8b714e5843b5591, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.Cargo.HumanCargoDropInput
+  dropKey: 31
+  dropHeight: 0.35
 --- !u!1 &784769122
 GameObject:
   m_ObjectHideFlags: 0
@@ -49971,6 +49990,7 @@ MonoBehaviour:
   validateOnStart: 1
   playerMovement: {fileID: 783676744}
   opponentMovement: {fileID: 1631151184}
+  pathfinder: {fileID: 1975268772}
 --- !u!1 &2126983935
 GameObject:
   m_ObjectHideFlags: 0
@@ -50629,7 +50649,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3078557802807398884, guid: e19825f352aeef043acd7d916f011234, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 783676748}
   m_SourcePrefab: {fileID: 100100000, guid: e19825f352aeef043acd7d916f011234, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

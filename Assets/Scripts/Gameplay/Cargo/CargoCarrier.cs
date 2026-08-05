@@ -16,7 +16,9 @@ namespace CargoClash.Gameplay.Cargo
 
         public bool TryPickUp(CargoItem cargo)
         {
-            if (cargo == null || IsCarrying)
+            if (cargo == null ||
+                IsCarrying ||
+                !cargo.CanBePickedUpBy(this))
             {
                 return false;
             }
@@ -39,7 +41,9 @@ namespace CargoClash.Gameplay.Cargo
             CargoItem droppedCargo = carriedCargo;
             carriedCargo = null;
 
-            droppedCargo.SetDropped(worldPosition);
+            droppedCargo.SetDropped(
+                worldPosition,
+                this);
 
             return droppedCargo;
         }
