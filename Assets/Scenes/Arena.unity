@@ -4780,7 +4780,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.DeliveryZone
   owner: 0
   zoneType: 0
-  centerCell: {x: 3, y: 10}
+  centerCell: {x: 2, y: 10}
   deliveryRange: 1
   scoreMultiplier: 1
   providesCoolingBonus: 1
@@ -4794,7 +4794,7 @@ Transform:
   m_GameObject: {fileID: 210493482}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3, y: 0.05, z: 10}
+  m_LocalPosition: {x: 2, y: 0.05, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5498,7 +5498,7 @@ Transform:
   m_GameObject: {fileID: 243669218}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7, y: 0, z: 8}
+  m_LocalPosition: {x: 8, y: 0, z: 8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5516,7 +5516,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d6d888298850b14bb2b3ecdf72ea843, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.Cargo.CargoSpawnSlot
-  cell: {x: 7, y: 8}
+  cell: {x: 8, y: 8}
   cargoHeight: 0.4
 --- !u!1 &245124948
 GameObject:
@@ -14560,7 +14560,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d6d888298850b14bb2b3ecdf72ea843, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.Cargo.CargoSpawnSlot
-  cell: {x: 12, y: 8}
+  cell: {x: 11, y: 8}
   cargoHeight: 0.4
 --- !u!4 &604649580
 Transform:
@@ -14571,7 +14571,7 @@ Transform:
   m_GameObject: {fileID: 604649578}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 12, y: 0, z: 8}
+  m_LocalPosition: {x: 11, y: 0, z: 8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -19365,6 +19365,17 @@ Transform:
   - {fileID: 1151447754}
   m_Father: {fileID: 84060434}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &783676744 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5059686343740330512, guid: e19825f352aeef043acd7d916f011234, type: 3}
+  m_PrefabInstance: {fileID: 7637649977693122113}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f51595bef00ffb842a1ac63f713583fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Movement.GridMovementController
 --- !u!1 &784769122
 GameObject:
   m_ObjectHideFlags: 0
@@ -33166,7 +33177,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d6d888298850b14bb2b3ecdf72ea843, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.Cargo.CargoSpawnSlot
-  cell: {x: 15, y: 5}
+  cell: {x: 15, y: 4}
   cargoHeight: 0.4
 --- !u!4 &1354860996
 Transform:
@@ -33177,7 +33188,7 @@ Transform:
   m_GameObject: {fileID: 1354860994}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 15, y: 0, z: 5}
+  m_LocalPosition: {x: 15, y: 0, z: 4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -38776,6 +38787,17 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1630258490}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1631151184 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8794218895917253165, guid: 80a3fcaf7a8d99f4bb8ca2f8152d8e51, type: 3}
+  m_PrefabInstance: {fileID: 5225632305302112661}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f51595bef00ffb842a1ac63f713583fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Movement.GridMovementController
 --- !u!1 &1642013064
 GameObject:
   m_ObjectHideFlags: 0
@@ -40297,7 +40319,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.DeliveryZone
   owner: 1
   zoneType: 0
-  centerCell: {x: 16, y: 10}
+  centerCell: {x: 17, y: 10}
   deliveryRange: 1
   scoreMultiplier: 1
   providesCoolingBonus: 1
@@ -40311,7 +40333,7 @@ Transform:
   m_GameObject: {fileID: 1736323908}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 16, y: 0.05, z: 10}
+  m_LocalPosition: {x: 17, y: 0.05, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -45132,7 +45154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d6d888298850b14bb2b3ecdf72ea843, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.Cargo.CargoSpawnSlot
-  cell: {x: 4, y: 5}
+  cell: {x: 4, y: 4}
   cargoHeight: 0.4
 --- !u!4 &1928566305
 Transform:
@@ -45143,7 +45165,7 @@ Transform:
   m_GameObject: {fileID: 1928566303}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4, y: 0, z: 5}
+  m_LocalPosition: {x: 4, y: 0, z: 4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -49947,6 +49969,8 @@ MonoBehaviour:
   preferredSpawnZoneDistance: 3
   requireMirrorSymmetry: 1
   validateOnStart: 1
+  playerMovement: {fileID: 783676744}
+  opponentMovement: {fileID: 1631151184}
 --- !u!1 &2126983935
 GameObject:
   m_ObjectHideFlags: 0

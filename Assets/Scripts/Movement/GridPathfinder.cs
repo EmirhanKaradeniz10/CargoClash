@@ -30,11 +30,7 @@ namespace CargoClash.Movement
 
         private void Awake()
         {
-            if (mapGenerator == null)
-            {
-                mapGenerator =
-                    FindAnyObjectByType<GridMapGenerator>();
-            }
+            ResolveMapGenerator();
 
             if (occupancyManager == null)
             {
@@ -140,6 +136,108 @@ namespace CargoClash.Movement
             }
 
             return emptyPath;
+        }
+
+        public List<Vector2Int> FindStaticPath(
+    Vector2Int start,
+    Vector2Int goal)
+        {
+            List<Vector2Int> emptyPath = new();
+
+            ResolveMapGenerator();
+
+            if (mapGenerator == null ||
+                !mapGenerator.IsWalkable(start) ||
+                !mapGenerator.IsWalkable(goal))
+            {
+                return emptyPath;
+            }
+
+            if (start == goal)
+            {
+                return emptyPath;
+            }
+
+            List<Vector2Int> openSet = new()
+    {
+        start
+    };
+
+            HashSet<Vector2Int> closedSet = new();
+
+            Dictionary<Vector2Int, Vector2Int> cameFrom = new();
+
+            Dictionary<Vector2Int, int> gScore = new()
+            {
+                [start] = 0
+            };
+
+            Dictionary<Vector2Int, int> fScore = new()
+            {
+                [start] = ManhattanDistance(start, goal)
+            };
+
+            while (openSet.Count > 0)
+            {
+                Vector2Int current =
+                    GetLowestScoreCell(openSet, fScore);
+
+                if (current == goal)
+                {
+                    return ReconstructPath(
+                        cameFrom,
+                        current,
+                        start);
+                }
+
+                openSet.Remove(current);
+                closedSet.Add(current);
+
+                foreach (Vector2Int direction in Directions)
+                {
+                    Vector2Int neighbour =
+                        current + direction;
+
+                    if (closedSet.Contains(neighbour) ||
+                        !mapGenerator.IsWalkable(neighbour))
+                    {
+                        continue;
+                    }
+
+                    int tentativeGScore =
+                        gScore[current] + 1;
+
+                    if (gScore.TryGetValue(
+                            neighbour,
+                            out int existingGScore) &&
+                        tentativeGScore >= existingGScore)
+                    {
+                        continue;
+                    }
+
+                    cameFrom[neighbour] = current;
+                    gScore[neighbour] = tentativeGScore;
+                    fScore[neighbour] =
+                        tentativeGScore +
+                        ManhattanDistance(neighbour, goal);
+
+                    if (!openSet.Contains(neighbour))
+                    {
+                        openSet.Add(neighbour);
+                    }
+                }
+            }
+
+            return emptyPath;
+        }
+
+        private void ResolveMapGenerator()
+        {
+            if (mapGenerator == null)
+            {
+                mapGenerator =
+                    FindAnyObjectByType<GridMapGenerator>();
+            }
         }
 
         public bool IsWalkable(

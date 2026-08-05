@@ -37,6 +37,15 @@ namespace CargoClash.Movement
 
         public bool IsMoving => isMoving;
 
+        public Vector2Int StartingCell =>
+            WorldToGrid(transform.position);
+
+        public Vector2Int MinimumCell =>
+            minimumCell;
+
+        public Vector2Int MaximumCell =>
+            maximumCell;
+
         private void Awake()
         {
             CurrentCell = WorldToGrid(transform.position);

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using CargoClash.Gameplay;
 using CargoClash.Gameplay.Cargo;
 using UnityEngine;
+using CargoClash.Movement;
 
 namespace CargoClash.Map
 {
@@ -24,6 +25,16 @@ namespace CargoClash.Map
         [Header("Validation")]
         [SerializeField]
         private bool validateOnStart = true;
+
+        [Header("Participants")]
+        [SerializeField]
+        private GridMovementController playerMovement;
+
+        [SerializeField]
+        private GridMovementController opponentMovement;
+
+        [SerializeField]
+        private GridPathfinder pathfinder;
 
         private void Start()
         {
@@ -63,6 +74,16 @@ namespace CargoClash.Map
                 deliveryZones);
 
             errorCount += ValidateCargoSlots(
+                cargoSlots);
+
+            errorCount += ValidateStartingCells(
+                cargoSlots,
+                deliveryZones);
+
+            errorCount += ValidatePathSymmetry(
+                deliveryZones);
+
+            errorCount += ValidateCargoPathSymmetry(
                 cargoSlots);
 
             ValidateSpawnZoneDistances(
@@ -610,6 +631,493 @@ namespace CargoClash.Map
             return errorCount;
         }
 
+        private int ValidateStartingCells(
+    CargoSpawnSlot[] cargoSlots,
+    DeliveryZone[] deliveryZones)
+        {
+            int errorCount = 0;
+
+            if (!ResolveParticipantReferences())
+            {
+                return 1;
+            }
+
+            Vector2Int playerStart =
+                playerMovement.StartingCell;
+
+            Vector2Int opponentStart =
+                opponentMovement.StartingCell;
+
+            errorCount += ValidateSingleStartingCell(
+                "Player",
+                playerStart,
+                cargoSlots,
+                deliveryZones,
+                playerMovement);
+
+            errorCount += ValidateSingleStartingCell(
+                "Opponent",
+                opponentStart,
+                cargoSlots,
+                deliveryZones,
+                opponentMovement);
+
+            if (playerStart == opponentStart)
+            {
+                Debug.LogError(
+                    $"Player and Opponent use the same " +
+                    $"starting cell: {playerStart}.",
+                    this);
+
+                errorCount++;
+            }
+
+            if (requireMirrorSymmetry)
+            {
+                Vector2Int expectedOpponentStart =
+                    MirrorCell(playerStart);
+
+                if (opponentStart != expectedOpponentStart)
+                {
+                    Debug.LogError(
+                        $"Opponent starting cell {opponentStart} " +
+                        $"is not the mirror of Player starting " +
+                        $"cell {playerStart}. Expected: " +
+                        $"{expectedOpponentStart}.",
+                        this);
+
+                    errorCount++;
+                }
+            }
+
+            return errorCount;
+        }
+
+        private int ValidatePathSymmetry(
+    DeliveryZone[] deliveryZones)
+        {
+            if (!ResolveParticipantReferences() ||
+                !ResolvePathfinder())
+            {
+                return 1;
+            }
+
+            DeliveryZone playerHome =
+                FindDeliveryZone(
+                    deliveryZones,
+                    PlayerSide.Player,
+                    DeliveryZoneType.Home);
+
+            DeliveryZone opponentHome =
+                FindDeliveryZone(
+                    deliveryZones,
+                    PlayerSide.Opponent,
+                    DeliveryZoneType.Home);
+
+            DeliveryZone playerForward =
+                FindDeliveryZone(
+                    deliveryZones,
+                    PlayerSide.Player,
+                    DeliveryZoneType.Forward);
+
+            DeliveryZone opponentForward =
+                FindDeliveryZone(
+                    deliveryZones,
+                    PlayerSide.Opponent,
+                    DeliveryZoneType.Forward);
+
+            if (playerHome == null ||
+                opponentHome == null ||
+                playerForward == null ||
+                opponentForward == null)
+            {
+                Debug.LogError(
+                    "Path symmetry could not be validated " +
+                    "because one or more DeliveryZones are missing.",
+                    this);
+
+                return 1;
+            }
+
+            int errorCount = 0;
+
+            errorCount += ComparePathLengths(
+                "Home",
+                playerMovement.StartingCell,
+                playerHome,
+                opponentMovement.StartingCell,
+                opponentHome);
+
+            errorCount += ComparePathLengths(
+                "Forward",
+                playerMovement.StartingCell,
+                playerForward,
+                opponentMovement.StartingCell,
+                opponentForward);
+
+            return errorCount;
+        }
+
+        private static DeliveryZone FindDeliveryZone(
+    DeliveryZone[] deliveryZones,
+    PlayerSide owner,
+    DeliveryZoneType zoneType)
+        {
+            foreach (DeliveryZone zone in deliveryZones)
+            {
+                if (zone != null &&
+                    zone.Owner == owner &&
+                    zone.ZoneType == zoneType)
+                {
+                    return zone;
+                }
+            }
+
+            return null;
+        }
+
+        private int ValidateSingleStartingCell(
+    string participantName,
+    Vector2Int startingCell,
+    CargoSpawnSlot[] cargoSlots,
+    DeliveryZone[] deliveryZones,
+    Object context)
+        {
+            int errorCount = 0;
+
+            if (!mapGenerator.IsInsideGrid(startingCell))
+            {
+                Debug.LogError(
+                    $"{participantName} starting cell " +
+                    $"{startingCell} is outside the grid.",
+                    context);
+
+                return 1;
+            }
+
+            if (!mapGenerator.IsWalkable(startingCell))
+            {
+                Debug.LogError(
+                    $"{participantName} starting cell " +
+                    $"{startingCell} is blocked.",
+                    context);
+
+                errorCount++;
+            }
+
+            foreach (CargoSpawnSlot slot in cargoSlots)
+            {
+                if (slot == null ||
+                    slot.Cell != startingCell)
+                {
+                    continue;
+                }
+
+                Debug.LogError(
+                    $"{participantName} starting cell " +
+                    $"{startingCell} overlaps cargo slot " +
+                    $"{slot.name}.",
+                    context);
+
+                errorCount++;
+            }
+
+            foreach (DeliveryZone zone in deliveryZones)
+            {
+                if (zone == null ||
+                    !zone.IsInDeliveryRange(startingCell))
+                {
+                    continue;
+                }
+
+                Debug.LogError(
+                    $"{participantName} starting cell " +
+                    $"{startingCell} is inside the delivery " +
+                    $"area of {zone.name}.",
+                    context);
+
+                errorCount++;
+            }
+
+            return errorCount;
+        }
+
+        private int ValidateCargoPathSymmetry(
+    CargoSpawnSlot[] cargoSlots)
+        {
+            if (!ResolveParticipantReferences() ||
+                !ResolvePathfinder())
+            {
+                return 1;
+            }
+
+            int errorCount = 0;
+
+            HashSet<Vector2Int> checkedCells = new();
+
+            foreach (CargoSpawnSlot slot in cargoSlots)
+            {
+                if (slot == null ||
+                    checkedCells.Contains(slot.Cell))
+                {
+                    continue;
+                }
+
+                Vector2Int mirrorCell =
+                    MirrorCell(slot.Cell);
+
+                CargoSpawnSlot mirrorSlot =
+                    FindCargoSlotAtCell(
+                        cargoSlots,
+                        mirrorCell);
+
+                if (mirrorSlot == null)
+                {
+                    // Bu durum zaten ValidateCargoSlotSymmetry
+                    // tarafından ayrıca raporlanıyor.
+                    continue;
+                }
+
+                int playerPathLength =
+                    GetStaticPathLength(
+                        playerMovement.StartingCell,
+                        slot.Cell);
+
+                int opponentPathLength =
+                    GetStaticPathLength(
+                        opponentMovement.StartingCell,
+                        mirrorSlot.Cell);
+
+                if (playerPathLength < 0 ||
+                    opponentPathLength < 0)
+                {
+                    Debug.LogError(
+                        $"Cargo path could not be calculated for " +
+                        $"{slot.name} at {slot.Cell} and its mirror " +
+                        $"{mirrorSlot.name} at {mirrorSlot.Cell}. " +
+                        $"Player path: {playerPathLength}, " +
+                        $"Opponent path: {opponentPathLength}.",
+                        this);
+
+                    errorCount++;
+
+                    checkedCells.Add(slot.Cell);
+                    checkedCells.Add(mirrorSlot.Cell);
+                    continue;
+                }
+
+                int difference =
+                    Mathf.Abs(
+                        playerPathLength -
+                        opponentPathLength);
+
+                if (difference > 1)
+                {
+                    Debug.LogError(
+                        $"Cargo path imbalance between " +
+                        $"{slot.name} at {slot.Cell} and " +
+                        $"{mirrorSlot.name} at {mirrorSlot.Cell}. " +
+                        $"Player path: {playerPathLength}, " +
+                        $"Opponent path: {opponentPathLength}, " +
+                        $"difference: {difference}. " +
+                        "Maximum allowed difference: 1.",
+                        this);
+
+                    errorCount++;
+                }
+
+                checkedCells.Add(slot.Cell);
+                checkedCells.Add(mirrorSlot.Cell);
+            }
+
+            return errorCount;
+        }
+
+        private static CargoSpawnSlot FindCargoSlotAtCell(
+    CargoSpawnSlot[] cargoSlots,
+    Vector2Int targetCell)
+        {
+            foreach (CargoSpawnSlot slot in cargoSlots)
+            {
+                if (slot != null &&
+                    slot.Cell == targetCell)
+                {
+                    return slot;
+                }
+            }
+
+            return null;
+        }
+
+        private int GetStaticPathLength(
+    Vector2Int start,
+    Vector2Int goal)
+        {
+            if (start == goal)
+            {
+                return 0;
+            }
+
+            if (!mapGenerator.IsWalkable(start) ||
+                !mapGenerator.IsWalkable(goal))
+            {
+                return -1;
+            }
+
+            List<Vector2Int> path =
+                pathfinder.FindStaticPath(
+                    start,
+                    goal);
+
+            return path.Count == 0
+                ? -1
+                : path.Count;
+        }
+
+        private int ComparePathLengths(
+    string routeName,
+    Vector2Int playerStart,
+    DeliveryZone playerZone,
+    Vector2Int opponentStart,
+    DeliveryZone opponentZone)
+        {
+            int playerLength =
+                GetShortestPathLengthToZone(
+                    playerStart,
+                    playerZone);
+
+            int opponentLength =
+                GetShortestPathLengthToZone(
+                    opponentStart,
+                    opponentZone);
+
+            if (playerLength < 0 ||
+                opponentLength < 0)
+            {
+                Debug.LogError(
+                    $"{routeName} route could not be calculated. " +
+                    $"Player length: {playerLength}, " +
+                    $"Opponent length: {opponentLength}.",
+                    this);
+
+                return 1;
+            }
+
+            int difference =
+                Mathf.Abs(playerLength - opponentLength);
+
+            if (difference <= 1)
+            {
+                return 0;
+            }
+
+            Debug.LogError(
+                $"{routeName} path lengths are not balanced. " +
+                $"Player: {playerLength}, " +
+                $"Opponent: {opponentLength}, " +
+                $"Difference: {difference}. " +
+                "Maximum allowed difference: 1.",
+                this);
+
+            return 1;
+        }
+
+        private int GetShortestPathLengthToZone(
+    Vector2Int start,
+    DeliveryZone zone)
+        {
+            int shortestLength = int.MaxValue;
+
+            HashSet<Vector2Int> deliveryCells =
+                GetDeliveryCells(zone);
+
+            foreach (Vector2Int targetCell in deliveryCells)
+            {
+                if (!mapGenerator.IsWalkable(targetCell))
+                {
+                    continue;
+                }
+
+                if (start == targetCell)
+                {
+                    return 0;
+                }
+
+                List<Vector2Int> path =
+                    pathfinder.FindStaticPath(
+                        start,
+                        targetCell);
+
+                if (path.Count == 0)
+                {
+                    continue;
+                }
+
+                if (path.Count < shortestLength)
+                {
+                    shortestLength = path.Count;
+                }
+            }
+
+            return shortestLength == int.MaxValue
+                ? -1
+                : shortestLength;
+        }
+
+        private bool ResolveParticipantReferences()
+        {
+            if (playerMovement != null &&
+                opponentMovement != null)
+            {
+                return true;
+            }
+
+            GridMovementController[] movementControllers =
+                FindObjectsByType<GridMovementController>();
+
+            foreach (GridMovementController controller
+                     in movementControllers)
+            {
+                if (controller == null)
+                {
+                    continue;
+                }
+
+                PlayerIdentity identity =
+                    controller.GetComponent<PlayerIdentity>();
+
+                if (identity == null)
+                {
+                    continue;
+                }
+
+                switch (identity.Side)
+                {
+                    case PlayerSide.Player:
+                        playerMovement = controller;
+                        break;
+
+                    case PlayerSide.Opponent:
+                        opponentMovement = controller;
+                        break;
+                }
+            }
+
+            bool referencesFound =
+                playerMovement != null &&
+                opponentMovement != null;
+
+            if (!referencesFound)
+            {
+                Debug.LogError(
+                    "Player and Opponent movement controllers " +
+                    "could not both be resolved.",
+                    this);
+            }
+
+            return referencesFound;
+        }
+
         private HashSet<Vector2Int> GetDeliveryCells(
             DeliveryZone zone)
         {
@@ -671,6 +1179,26 @@ namespace CargoClash.Map
 
             Debug.LogError(
                 "GridMapGenerator was not found.",
+                this);
+
+            return false;
+        }
+
+        private bool ResolvePathfinder()
+        {
+            if (pathfinder == null)
+            {
+                pathfinder =
+                    FindAnyObjectByType<GridPathfinder>();
+            }
+
+            if (pathfinder != null)
+            {
+                return true;
+            }
+
+            Debug.LogError(
+                "GridPathfinder was not found.",
                 this);
 
             return false;
