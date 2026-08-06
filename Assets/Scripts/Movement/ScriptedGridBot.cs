@@ -43,6 +43,8 @@ namespace CargoClash.Movement
 
         private CargoSpawnSlot targetCargoSlot;
 
+        private CharacterStatusController statusController;
+
         private List<Vector2Int> currentPath = new();
         private int pathIndex;
 
@@ -51,6 +53,9 @@ namespace CargoClash.Movement
 
         private void Awake()
         {
+            statusController =
+                GetComponent<CharacterStatusController>();
+
             movementController =
                 GetComponent<GridMovementController>();
 
@@ -85,6 +90,19 @@ namespace CargoClash.Movement
 
         private void Update()
         {
+            if (statusController != null &&
+                statusController.IsStunned)
+            {
+                return;
+            }
+
+            if (Time.time < nextDecisionTime ||
+                movementController.IsMoving)
+            {
+                return;
+            }
+
+
             if (Time.time < nextDecisionTime ||
                 movementController.IsMoving)
             {

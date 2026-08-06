@@ -18,10 +18,15 @@ namespace CargoClash.Movement
         private Vector2Int heldDirection;
         private float nextRepeatTime;
 
+        private GridDashController dashController;
+
         private void Awake()
         {
             movementController =
                 GetComponent<GridMovementController>();
+
+            dashController =
+                GetComponent<GridDashController>();
         }
 
         private void Update()
@@ -29,6 +34,14 @@ namespace CargoClash.Movement
             Keyboard keyboard = Keyboard.current;
 
             if (keyboard == null)
+            {
+                ResetHeldInput();
+                return;
+            }
+
+            if (dashController != null &&
+                (dashController.IsDashQueued ||
+                 movementController.IsDashing))
             {
                 ResetHeldInput();
                 return;

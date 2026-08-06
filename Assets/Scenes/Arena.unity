@@ -19381,7 +19381,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f51595bef00ffb842a1ac63f713583fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Movement.GridMovementController
---- !u!114 &783676748
+--- !u!114 &783676745
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -19390,11 +19390,43 @@ MonoBehaviour:
   m_GameObject: {fileID: 783676737}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f63b13a09fe31f94e8b714e5843b5591, type: 3}
+  m_Script: {fileID: 11500000, guid: 168709dd014fce749b4d276df7db962e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.Cargo.HumanCargoDropInput
-  dropKey: 31
-  dropHeight: 0.35
+  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Movement.GridDashController
+  emptyDashDistance: 2
+  carriedDashDistance: 1
+  heavyCargoDashDistance: 0
+  cooldownDuration: 2
+  dashSpeedMultiplier: 4
+  recoveryDuration: 0.05
+  droppedCargoHeight: 0.35
+--- !u!114 &783676755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 783676737}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c9eb61bec547df409e1e4018b4c5948, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Movement.HumanDashInput
+  dashKey: 19
+--- !u!114 &783676756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 783676737}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6d17f49ffdc9d447801d4a9e948c101, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.CharacterStatusController
+  defaultStunDuration: 0.8
+  defaultInvulnerabilityDuration: 1.5
 --- !u!1 &784769122
 GameObject:
   m_ObjectHideFlags: 0
@@ -29068,6 +29100,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1151447753}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1158266857 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1622974352518742489, guid: 80a3fcaf7a8d99f4bb8ca2f8152d8e51, type: 3}
+  m_PrefabInstance: {fileID: 5225632305302112661}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1177346610
 GameObject:
   m_ObjectHideFlags: 0
@@ -38811,12 +38848,26 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8794218895917253165, guid: 80a3fcaf7a8d99f4bb8ca2f8152d8e51, type: 3}
   m_PrefabInstance: {fileID: 5225632305302112661}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1158266857}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f51595bef00ffb842a1ac63f713583fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Movement.GridMovementController
+--- !u!114 &1631151194
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1158266857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6d17f49ffdc9d447801d4a9e948c101, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.CharacterStatusController
+  defaultStunDuration: 0.8
+  defaultInvulnerabilityDuration: 1.5
 --- !u!1 &1642013064
 GameObject:
   m_ObjectHideFlags: 0
@@ -50560,7 +50611,10 @@ PrefabInstance:
     - {fileID: 433371822624383041, guid: 80a3fcaf7a8d99f4bb8ca2f8152d8e51, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1622974352518742489, guid: 80a3fcaf7a8d99f4bb8ca2f8152d8e51, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1631151194}
   m_SourcePrefab: {fileID: 100100000, guid: 80a3fcaf7a8d99f4bb8ca2f8152d8e51, type: 3}
 --- !u!1001 &7637649977693122113
 PrefabInstance:
@@ -50652,7 +50706,13 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 3078557802807398884, guid: e19825f352aeef043acd7d916f011234, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 783676748}
+      addedObject: {fileID: 783676745}
+    - targetCorrespondingSourceObject: {fileID: 3078557802807398884, guid: e19825f352aeef043acd7d916f011234, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 783676755}
+    - targetCorrespondingSourceObject: {fileID: 3078557802807398884, guid: e19825f352aeef043acd7d916f011234, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 783676756}
   m_SourcePrefab: {fileID: 100100000, guid: e19825f352aeef043acd7d916f011234, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

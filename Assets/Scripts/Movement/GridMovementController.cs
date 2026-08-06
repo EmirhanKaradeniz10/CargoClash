@@ -31,11 +31,21 @@ namespace CargoClash.Movement
             new(0.35f, 0.4f, 0.35f);
 
         private bool isMoving;
+        private bool isDashing;
+
+        private bool isMovementLocked;
+
         private Vector2Int bufferedDirection;
+        private Vector2Int facingDirection = Vector2Int.up;
 
         public Vector2Int CurrentCell { get; private set; }
 
+        public Vector2Int FacingDirection =>
+            facingDirection;
+
         public bool IsMoving => isMoving;
+
+        public bool IsDashing => isDashing;
 
         public Vector2Int StartingCell =>
             WorldToGrid(transform.position);
@@ -46,15 +56,23 @@ namespace CargoClash.Movement
         public Vector2Int MaximumCell =>
             maximumCell;
 
+        public bool IsMovementLocked =>
+            isMovementLocked;
+
         private void Awake()
         {
-            CurrentCell = WorldToGrid(transform.position);
+            CurrentCell =
+                WorldToGrid(transform.position);
+
+            facingDirection =
+                GetCardinalDirection(transform.forward);
+
             SnapToCurrentCell();
 
             if (occupancyManager == null)
             {
                 occupancyManager =
-                       FindAnyObjectByType<GridOccupancyManager>();
+                    FindAnyObjectByType<GridOccupancyManager>();
             }
 
             if (occupancyManager == null)
@@ -67,10 +85,13 @@ namespace CargoClash.Movement
                 return;
             }
 
-            if (!occupancyManager.TryRegister(this, CurrentCell))
+            if (!occupancyManager.TryRegister(
+                    this,
+                    CurrentCell))
             {
                 Debug.LogError(
-                    $"Starting cell {CurrentCell} is already occupied.",
+                    $"Starting cell {CurrentCell} " +
+                    "is already occupied.",
                     this);
 
                 enabled = false;
@@ -79,18 +100,28 @@ namespace CargoClash.Movement
 
         private void Update()
         {
-            if (!isMoving &&
+            if (!isMovementLocked &&
+                !isMoving &&
                 bufferedDirection != Vector2Int.zero)
             {
-                Vector2Int direction = bufferedDirection;
-                bufferedDirection = Vector2Int.zero;
+                Vector2Int direction =
+                    bufferedDirection;
+
+                bufferedDirection =
+                    Vector2Int.zero;
 
                 TryMove(direction);
             }
         }
 
+        public void ClearBufferedMovement()
+        {
+            bufferedDirection = Vector2Int.zero;
+        }
+
         public bool TryMove(Vector2Int direction)
         {
+
             if (!IsCardinalDirection(direction))
             {
                 Debug.LogWarning(
@@ -100,25 +131,41 @@ namespace CargoClash.Movement
                 return false;
             }
 
+            if (isMovementLocked || isDashing)
+            {
+                return false;
+            }
+
+            if (isDashing)
+            {
+                return false;
+            }
+
             if (isMoving)
             {
                 bufferedDirection = direction;
                 return false;
             }
 
-            Vector2Int targetCell = CurrentCell + direction;
+            facingDirection = direction;
+
+            Vector2Int targetCell =
+                CurrentCell + direction;
 
             if (!IsInsideGrid(targetCell))
             {
                 return false;
             }
 
-            if (occupancyManager.IsOccupied(targetCell, this))
+            if (occupancyManager.IsOccupied(
+                    targetCell,
+                    this))
             {
                 return false;
             }
 
-            Vector3 targetPosition = GridToWorld(targetCell);
+            Vector3 targetPosition =
+                GridToWorld(targetCell);
 
             if (IsCellBlocked(targetPosition))
             {
@@ -126,7 +173,91 @@ namespace CargoClash.Movement
             }
 
             StartCoroutine(
-                MoveToCellRoutine(targetCell, targetPosition));
+                MoveToCellRoutine(
+                    targetCell,
+                    targetPosition));
+
+            return true;
+        }
+
+        public bool TryDash(
+            Vector2Int direction,
+            int maximumDistance,
+            float dashSpeedMultiplier,
+            float recoveryDuration,
+            out GridMovementController hitTarget)
+        {
+
+            hitTarget = null;
+
+            if (isMovementLocked ||
+                        isMoving ||
+                        maximumDistance <= 0 ||
+                        !IsCardinalDirection(direction))
+            {
+                return false;
+            }
+
+            if (isMoving ||
+                maximumDistance <= 0 ||
+                !IsCardinalDirection(direction))
+            {
+                return false;
+            }
+
+            bufferedDirection = Vector2Int.zero;
+            facingDirection = direction;
+
+            Vector2Int destinationCell =
+                CurrentCell;
+
+            for (int step = 1;
+                 step <= maximumDistance;
+                 step++)
+            {
+                Vector2Int candidateCell =
+                    CurrentCell +
+                    direction * step;
+
+                if (!IsInsideGrid(candidateCell))
+                {
+                    break;
+                }
+
+                if (occupancyManager.TryGetOccupant(
+                        candidateCell,
+                        this,
+                        out GridMovementController occupant))
+                {
+                    hitTarget = occupant;
+                    break;
+                }
+
+                Vector3 candidatePosition =
+                    GridToWorld(candidateCell);
+
+                if (IsCellBlocked(candidatePosition))
+                {
+                    break;
+                }
+
+                destinationCell = candidateCell;
+            }
+
+            if (destinationCell == CurrentCell)
+            {
+                StartCoroutine(
+                    DashRecoveryRoutine(
+                        recoveryDuration));
+
+                return true;
+            }
+
+            StartCoroutine(
+                DashToCellRoutine(
+                    destinationCell,
+                    dashSpeedMultiplier,
+                    recoveryDuration));
 
             return true;
         }
@@ -137,36 +268,46 @@ namespace CargoClash.Movement
         {
             isMoving = true;
 
-            Vector2Int previousCell = CurrentCell;
+            Vector2Int previousCell =
+                CurrentCell;
 
-            if (!occupancyManager.TryRegister(this, targetCell))
+            if (!occupancyManager.TryRegister(
+                    this,
+                    targetCell))
             {
                 isMoving = false;
                 yield break;
             }
 
-            Vector3 startPosition = transform.position;
+            Vector3 startPosition =
+                transform.position;
 
-            float distance = Vector3.Distance(
-                startPosition,
-                targetPosition);
+            float distance =
+                Vector3.Distance(
+                    startPosition,
+                    targetPosition);
 
-            float duration = distance / movementSpeed;
+            float duration =
+                distance / movementSpeed;
+
             float elapsedTime = 0f;
 
-            FaceDirection(targetPosition - startPosition);
+            FaceDirection(
+                targetPosition - startPosition);
 
             while (elapsedTime < duration)
             {
                 elapsedTime += Time.deltaTime;
 
-                float progress = Mathf.Clamp01(
-                    elapsedTime / duration);
+                float progress =
+                    Mathf.Clamp01(
+                        elapsedTime / duration);
 
-                transform.position = Vector3.Lerp(
-                    startPosition,
-                    targetPosition,
-                    progress);
+                transform.position =
+                    Vector3.Lerp(
+                        startPosition,
+                        targetPosition,
+                        progress);
 
                 yield return null;
             }
@@ -174,12 +315,121 @@ namespace CargoClash.Movement
             transform.position = targetPosition;
             CurrentCell = targetCell;
 
-            occupancyManager.Release(this, previousCell);
+            occupancyManager.Release(
+                this,
+                previousCell);
 
             isMoving = false;
         }
 
-        private bool IsCellBlocked(Vector3 targetPosition)
+        private IEnumerator DashToCellRoutine(
+            Vector2Int targetCell,
+            float speedMultiplier,
+            float recoveryDuration)
+        {
+            isMoving = true;
+            isDashing = true;
+
+            Vector2Int previousCell =
+                CurrentCell;
+
+            if (!occupancyManager.TryRegister(
+                    this,
+                    targetCell))
+            {
+                yield return new WaitForSeconds(
+                    recoveryDuration);
+
+                isMoving = false;
+                isDashing = false;
+                yield break;
+            }
+
+            Vector3 startPosition =
+                transform.position;
+
+            Vector3 targetPosition =
+                GridToWorld(targetCell);
+
+            float distance =
+                Vector3.Distance(
+                    startPosition,
+                    targetPosition);
+
+            float effectiveSpeed =
+                movementSpeed *
+                Mathf.Max(1f, speedMultiplier);
+
+            float duration =
+                distance / effectiveSpeed;
+
+            float elapsedTime = 0f;
+
+            FaceDirection(
+                targetPosition - startPosition);
+
+            while (elapsedTime < duration)
+            {
+                elapsedTime += Time.deltaTime;
+
+                float progress =
+                    Mathf.Clamp01(
+                        elapsedTime / duration);
+
+                transform.position =
+                    Vector3.Lerp(
+                        startPosition,
+                        targetPosition,
+                        progress);
+
+                yield return null;
+            }
+
+            transform.position = targetPosition;
+            CurrentCell = targetCell;
+
+            occupancyManager.Release(
+                this,
+                previousCell);
+
+            if (recoveryDuration > 0f)
+            {
+                yield return new WaitForSeconds(
+                    recoveryDuration);
+            }
+
+            isMoving = false;
+            isDashing = false;
+        }
+
+        public void SetMovementLocked(bool locked)
+        {
+            isMovementLocked = locked;
+
+            if (locked)
+            {
+                bufferedDirection = Vector2Int.zero;
+            }
+        }
+
+        private IEnumerator DashRecoveryRoutine(
+            float recoveryDuration)
+        {
+            isMoving = true;
+            isDashing = true;
+
+            if (recoveryDuration > 0f)
+            {
+                yield return new WaitForSeconds(
+                    recoveryDuration);
+            }
+
+            isMoving = false;
+            isDashing = false;
+        }
+
+        private bool IsCellBlocked(
+            Vector3 targetPosition)
         {
             return Physics.CheckBox(
                 targetPosition,
@@ -206,7 +456,8 @@ namespace CargoClash.Movement
                    direction == Vector2Int.right;
         }
 
-        private void FaceDirection(Vector3 worldDirection)
+        private void FaceDirection(
+            Vector3 worldDirection)
         {
             worldDirection.y = 0f;
 
@@ -215,18 +466,41 @@ namespace CargoClash.Movement
                 return;
             }
 
+            facingDirection =
+                GetCardinalDirection(worldDirection);
+
             transform.rotation =
                 Quaternion.LookRotation(worldDirection);
         }
 
-        private Vector2Int WorldToGrid(Vector3 worldPosition)
+        private static Vector2Int GetCardinalDirection(
+            Vector3 worldDirection)
         {
-            return new Vector2Int(
-                Mathf.RoundToInt(worldPosition.x / cellSize),
-                Mathf.RoundToInt(worldPosition.z / cellSize));
+            if (Mathf.Abs(worldDirection.x) >
+                Mathf.Abs(worldDirection.z))
+            {
+                return worldDirection.x >= 0f
+                    ? Vector2Int.right
+                    : Vector2Int.left;
+            }
+
+            return worldDirection.z >= 0f
+                ? Vector2Int.up
+                : Vector2Int.down;
         }
 
-        private Vector3 GridToWorld(Vector2Int cell)
+        private Vector2Int WorldToGrid(
+            Vector3 worldPosition)
+        {
+            return new Vector2Int(
+                Mathf.RoundToInt(
+                    worldPosition.x / cellSize),
+                Mathf.RoundToInt(
+                    worldPosition.z / cellSize));
+        }
+
+        private Vector3 GridToWorld(
+            Vector2Int cell)
         {
             return new Vector3(
                 cell.x * cellSize,
@@ -236,7 +510,8 @@ namespace CargoClash.Movement
 
         private void SnapToCurrentCell()
         {
-            transform.position = GridToWorld(CurrentCell);
+            transform.position =
+                GridToWorld(CurrentCell);
         }
 
         private void OnDrawGizmosSelected()

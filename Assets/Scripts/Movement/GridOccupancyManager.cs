@@ -5,8 +5,9 @@ namespace CargoClash.Movement
 {
     public sealed class GridOccupancyManager : MonoBehaviour
     {
-        private readonly Dictionary<Vector2Int, GridMovementController>
-            occupiedCells = new();
+        private readonly Dictionary<
+            Vector2Int,
+            GridMovementController> occupiedCells = new();
 
         public bool TryRegister(
             GridMovementController controller,
@@ -26,7 +27,6 @@ namespace CargoClash.Movement
             }
 
             occupiedCells[cell] = controller;
-
             return true;
         }
 
@@ -38,6 +38,30 @@ namespace CargoClash.Movement
                        cell,
                        out GridMovementController controller) &&
                    controller != requester;
+        }
+
+        public bool TryGetOccupant(
+            Vector2Int cell,
+            GridMovementController requester,
+            out GridMovementController occupant)
+        {
+            occupant = null;
+
+            if (!occupiedCells.TryGetValue(
+                    cell,
+                    out GridMovementController controller))
+            {
+                return false;
+            }
+
+            if (controller == null ||
+                controller == requester)
+            {
+                return false;
+            }
+
+            occupant = controller;
+            return true;
         }
 
         public void Release(
@@ -64,7 +88,8 @@ namespace CargoClash.Movement
 
             foreach (KeyValuePair<
                          Vector2Int,
-                         GridMovementController> entry in occupiedCells)
+                         GridMovementController> entry
+                     in occupiedCells)
             {
                 if (entry.Value == controller)
                 {
