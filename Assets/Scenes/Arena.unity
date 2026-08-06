@@ -19400,6 +19400,9 @@ MonoBehaviour:
   dashSpeedMultiplier: 4
   recoveryDuration: 0.05
   droppedCargoHeight: 0.35
+  maximumDropSearchDistance: 2
+  mapGenerator: {fileID: 822759455}
+  occupancyManager: {fileID: 338350676}
 --- !u!114 &783676755
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38868,6 +38871,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.CharacterStatusController
   defaultStunDuration: 0.8
   defaultInvulnerabilityDuration: 1.5
+--- !u!114 &1631151195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1158266857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 168709dd014fce749b4d276df7db962e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Movement.GridDashController
+  emptyDashDistance: 2
+  carriedDashDistance: 1
+  heavyCargoDashDistance: 0
+  cooldownDuration: 2
+  dashSpeedMultiplier: 3
+  recoveryDuration: 0.15
+  droppedCargoHeight: 0.35
+  maximumDropSearchDistance: 2
+  mapGenerator: {fileID: 822759455}
+  occupancyManager: {fileID: 338350676}
 --- !u!1 &1642013064
 GameObject:
   m_ObjectHideFlags: 0
@@ -50615,6 +50640,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1622974352518742489, guid: 80a3fcaf7a8d99f4bb8ca2f8152d8e51, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1631151194}
+    - targetCorrespondingSourceObject: {fileID: 1622974352518742489, guid: 80a3fcaf7a8d99f4bb8ca2f8152d8e51, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1631151195}
   m_SourcePrefab: {fileID: 100100000, guid: 80a3fcaf7a8d99f4bb8ca2f8152d8e51, type: 3}
 --- !u!1001 &7637649977693122113
 PrefabInstance:

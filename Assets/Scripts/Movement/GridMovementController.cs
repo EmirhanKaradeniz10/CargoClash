@@ -35,6 +35,8 @@ namespace CargoClash.Movement
 
         private bool isMovementLocked;
 
+        private Vector2Int movementTargetCell;
+
         private Vector2Int bufferedDirection;
         private Vector2Int facingDirection = Vector2Int.up;
 
@@ -59,10 +61,17 @@ namespace CargoClash.Movement
         public bool IsMovementLocked =>
             isMovementLocked;
 
+        public Vector2Int EffectiveCell =>
+            isMoving
+                ? movementTargetCell
+                : CurrentCell;
+
         private void Awake()
         {
             CurrentCell =
                 WorldToGrid(transform.position);
+
+            movementTargetCell = CurrentCell;
 
             facingDirection =
                 GetCardinalDirection(transform.forward);
@@ -172,6 +181,8 @@ namespace CargoClash.Movement
                 return false;
             }
 
+            movementTargetCell = targetCell;
+
             StartCoroutine(
                 MoveToCellRoutine(
                     targetCell,
@@ -253,6 +264,8 @@ namespace CargoClash.Movement
                 return true;
             }
 
+            movementTargetCell = destinationCell;
+
             StartCoroutine(
                 DashToCellRoutine(
                     destinationCell,
@@ -275,6 +288,7 @@ namespace CargoClash.Movement
                     this,
                     targetCell))
             {
+                movementTargetCell = CurrentCell;
                 isMoving = false;
                 yield break;
             }
@@ -314,6 +328,7 @@ namespace CargoClash.Movement
 
             transform.position = targetPosition;
             CurrentCell = targetCell;
+            movementTargetCell = targetCell;
 
             occupancyManager.Release(
                 this,
@@ -337,6 +352,8 @@ namespace CargoClash.Movement
                     this,
                     targetCell))
             {
+                movementTargetCell = CurrentCell;
+
                 yield return new WaitForSeconds(
                     recoveryDuration);
 
@@ -387,6 +404,7 @@ namespace CargoClash.Movement
 
             transform.position = targetPosition;
             CurrentCell = targetCell;
+            movementTargetCell = targetCell;
 
             occupancyManager.Release(
                 this,

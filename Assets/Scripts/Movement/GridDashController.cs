@@ -1,5 +1,6 @@
 using CargoClash.Gameplay;
 using CargoClash.Gameplay.Cargo;
+using CargoClash.Map;
 using UnityEngine;
 
 namespace CargoClash.Movement
@@ -20,7 +21,7 @@ namespace CargoClash.Movement
         private int heavyCargoDashDistance = 0;
 
         [Header("Dash Timing")]
-        [SerializeField, Min(0.1f)]
+        [SerializeField, Min(0f)]
         private float cooldownDuration = 2f;
 
         [SerializeField, Min(1f)]
@@ -32,6 +33,15 @@ namespace CargoClash.Movement
         [Header("Cargo Drop")]
         [SerializeField, Min(0f)]
         private float droppedCargoHeight = 0.35f;
+
+        [SerializeField, Min(1)]
+        private int maximumDropSearchDistance = 2;
+
+        [SerializeField]
+        private GridMapGenerator mapGenerator;
+
+        [SerializeField]
+        private GridOccupancyManager occupancyManager;
 
         private GridMovementController movementController;
         private CargoCarrier cargoCarrier;
@@ -52,6 +62,44 @@ namespace CargoClash.Movement
                 0f,
                 nextAllowedDashTime - Time.time);
 
+        private void Awake()
+        {
+            movementController =
+                GetComponent<GridMovementController>();
+
+            cargoCarrier =
+                GetComponent<CargoCarrier>();
+
+            playerIdentity =
+                GetComponent<PlayerIdentity>();
+
+            if (mapGenerator == null)
+            {
+                mapGenerator =
+                    FindAnyObjectByType<GridMapGenerator>();
+            }
+
+            if (occupancyManager == null)
+            {
+                occupancyManager =
+                    FindAnyObjectByType<GridOccupancyManager>();
+            }
+
+            if (mapGenerator == null)
+            {
+                Debug.LogError(
+                    "GridMapGenerator was not found.",
+                    this);
+            }
+
+            if (occupancyManager == null)
+            {
+                Debug.LogError(
+                    "GridOccupancyManager was not found.",
+                    this);
+            }
+        }
+
         private void Update()
         {
             if (!dashQueued ||
@@ -63,18 +111,6 @@ namespace CargoClash.Movement
             dashQueued = false;
 
             ExecuteDash(queuedDashDirection);
-        }
-
-        private void Awake()
-        {
-            movementController =
-                GetComponent<GridMovementController>();
-
-            cargoCarrier =
-                GetComponent<CargoCarrier>();
-
-            playerIdentity =
-                GetComponent<PlayerIdentity>();
         }
 
         public bool TryDash()
@@ -111,7 +147,7 @@ namespace CargoClash.Movement
         }
 
         private bool ExecuteDash(
-    Vector2Int direction)
+            Vector2Int direction)
         {
             if (IsOnCooldown ||
                 movementController.IsMoving ||
@@ -146,7 +182,9 @@ namespace CargoClash.Movement
 
             if (hitTarget != null)
             {
-                HandleDashHit(hitTarget);
+                HandleDashHit(
+                    hitTarget,
+                    direction);
             }
 
             return true;
@@ -173,7 +211,8 @@ namespace CargoClash.Movement
         }
 
         private void HandleDashHit(
-    GridMovementController targetMovement)
+            GridMovementController targetMovement,
+            Vector2Int dashDirection)
         {
             PlayerIdentity targetIdentity =
                 targetMovement.GetComponent<PlayerIdentity>();
@@ -222,15 +261,31 @@ namespace CargoClash.Movement
             if (droppedCargo)
             {
                 Vector2Int targetCell =
-                    targetMovement.CurrentCell;
+                    targetMovement.EffectiveCell;
 
-                Vector3 dropPosition = new(
-                    targetCell.x,
-                    droppedCargoHeight,
-                    targetCell.y);
+                Vector2Int dropCell =
+                    FindDropCell(
+                        targetCell,
+                        dashDirection);
+
+                Vector3 dropPosition =
+                    mapGenerator != null
+                        ? mapGenerator.GridToWorld(dropCell)
+                        : new Vector3(
+                            dropCell.x,
+                            0f,
+                            dropCell.y);
+
+                dropPosition.y =
+                    droppedCargoHeight;
 
                 targetCarrier.DropCargo(
                     dropPosition);
+
+                Debug.Log(
+                    $"Cargo dropped from {targetCell} " +
+                    $"to {dropCell}.",
+                    this);
             }
 
             Debug.Log(
@@ -238,6 +293,113 @@ namespace CargoClash.Movement
                 $"{targetIdentity.Side}. " +
                 $"Cargo dropped: {droppedCargo}.",
                 this);
+        }
+
+        private Vector2Int FindDropCell(
+            Vector2Int targetCell,
+            Vector2Int dashDirection)
+        {
+            Vector2Int rightDirection =
+                new(
+                    dashDirection.y,
+                    -dashDirection.x);
+
+            Vector2Int leftDirection =
+                new(
+                    -dashDirection.y,
+                    dashDirection.x);
+
+            Vector2Int[] preferredDirections =
+            {
+                dashDirection,
+                rightDirection,
+                leftDirection,
+                -dashDirection
+            };
+
+            foreach (Vector2Int direction
+                     in preferredDirections)
+            {
+                Vector2Int candidate =
+                    targetCell + direction;
+
+                if (IsValidDropCell(candidate))
+                {
+                    return candidate;
+                }
+            }
+
+            for (int distance = 2;
+                 distance <= maximumDropSearchDistance;
+                 distance++)
+            {
+                for (int xOffset = -distance;
+                     xOffset <= distance;
+                     xOffset++)
+                {
+                    int yOffset =
+                        distance -
+                        Mathf.Abs(xOffset);
+
+                    Vector2Int firstCandidate =
+                        targetCell +
+                        new Vector2Int(
+                            xOffset,
+                            yOffset);
+
+                    if (IsValidDropCell(firstCandidate))
+                    {
+                        return firstCandidate;
+                    }
+
+                    if (yOffset == 0)
+                    {
+                        continue;
+                    }
+
+                    Vector2Int secondCandidate =
+                        targetCell +
+                        new Vector2Int(
+                            xOffset,
+                            -yOffset);
+
+                    if (IsValidDropCell(secondCandidate))
+                    {
+                        return secondCandidate;
+                    }
+                }
+            }
+
+            Debug.LogWarning(
+                $"No free drop cell was found near " +
+                $"{targetCell}. Cargo will use the target cell.",
+                this);
+
+            return targetCell;
+        }
+
+        private bool IsValidDropCell(
+            Vector2Int cell)
+        {
+            if (mapGenerator == null ||
+                occupancyManager == null)
+            {
+                return false;
+            }
+
+            if (!mapGenerator.IsWalkable(cell))
+            {
+                return false;
+            }
+
+            if (occupancyManager.IsOccupied(
+                    cell,
+                    null))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private void OnValidate()
@@ -250,6 +412,11 @@ namespace CargoClash.Movement
 
             heavyCargoDashDistance =
                 Mathf.Max(0, heavyCargoDashDistance);
+
+            maximumDropSearchDistance =
+                Mathf.Max(
+                    1,
+                    maximumDropSearchDistance);
         }
     }
 }
