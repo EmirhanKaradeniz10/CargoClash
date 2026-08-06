@@ -115,9 +115,20 @@ namespace CargoClash.Movement
 
         public bool TryDash()
         {
+            return TryDash(
+                movementController.FacingDirection);
+        }
+
+        public bool TryDash(Vector2Int direction)
+        {
             if (IsOnCooldown ||
                 dashQueued ||
                 movementController.IsDashing)
+            {
+                return false;
+            }
+
+            if (!IsCardinalDirection(direction))
             {
                 return false;
             }
@@ -130,20 +141,17 @@ namespace CargoClash.Movement
                 return false;
             }
 
-            Vector2Int requestedDirection =
-                movementController.FacingDirection;
-
             movementController.ClearBufferedMovement();
 
             if (movementController.IsMoving)
             {
                 dashQueued = true;
-                queuedDashDirection = requestedDirection;
+                queuedDashDirection = direction;
 
                 return true;
             }
 
-            return ExecuteDash(requestedDirection);
+            return ExecuteDash(direction);
         }
 
         private bool ExecuteDash(
@@ -400,6 +408,15 @@ namespace CargoClash.Movement
             }
 
             return true;
+        }
+
+        private static bool IsCardinalDirection(
+            Vector2Int direction)
+        {
+            return direction == Vector2Int.up ||
+                   direction == Vector2Int.down ||
+                   direction == Vector2Int.left ||
+                   direction == Vector2Int.right;
         }
 
         private void OnValidate()

@@ -38887,8 +38887,8 @@ MonoBehaviour:
   carriedDashDistance: 1
   heavyCargoDashDistance: 0
   cooldownDuration: 2
-  dashSpeedMultiplier: 3
-  recoveryDuration: 0.15
+  dashSpeedMultiplier: 4
+  recoveryDuration: 0.05
   droppedCargoHeight: 0.35
   maximumDropSearchDistance: 2
   mapGenerator: {fileID: 822759455}

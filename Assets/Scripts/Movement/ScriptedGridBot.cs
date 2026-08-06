@@ -8,8 +8,10 @@ namespace CargoClash.Movement
     [RequireComponent(typeof(GridMovementController))]
     [RequireComponent(typeof(CargoCarrier))]
     [RequireComponent(typeof(PlayerIdentity))]
+
     public sealed class ScriptedGridBot : MonoBehaviour
     {
+
         private enum BotGoal
         {
             None,
@@ -45,6 +47,13 @@ namespace CargoClash.Movement
 
         private CharacterStatusController statusController;
 
+        private GridDashController dashController;
+
+        private PlayerIdentity opposingPlayer;
+        private GridMovementController opposingMovement;
+        private CargoCarrier opposingCargoCarrier;
+        private CharacterStatusController opposingStatus;
+
         private List<Vector2Int> currentPath = new();
         private int pathIndex;
 
@@ -65,6 +74,9 @@ namespace CargoClash.Movement
             playerIdentity =
                 GetComponent<PlayerIdentity>();
 
+            dashController =
+                GetComponent<GridDashController>();
+
             if (pathfinder == null)
             {
                 pathfinder =
@@ -75,6 +87,8 @@ namespace CargoClash.Movement
             {
                 FindHomeDeliveryZone();
             }
+
+            FindOpposingPlayer();
         }
 
         private void Start()
@@ -97,15 +111,16 @@ namespace CargoClash.Movement
             }
 
             if (Time.time < nextDecisionTime ||
-                movementController.IsMoving)
+                movementController.IsMoving ||
+                movementController.IsDashing)
             {
                 return;
             }
 
-
-            if (Time.time < nextDecisionTime ||
-                movementController.IsMoving)
+            if (TryDashAtOpposingPlayer())
             {
+                ClearCurrentPath();
+                ScheduleNextDecision();
                 return;
             }
 
@@ -329,6 +344,124 @@ namespace CargoClash.Movement
             }
         }
 
+        private void FindOpposingPlayer()
+        {
+            PlayerIdentity[] players =
+                FindObjectsByType<PlayerIdentity>();
+
+            foreach (PlayerIdentity candidate in players)
+            {
+                if (candidate == null ||
+                    candidate == playerIdentity ||
+                    candidate.Side == playerIdentity.Side)
+                {
+                    continue;
+                }
+
+                opposingPlayer = candidate;
+
+                opposingMovement =
+                    candidate.GetComponent<GridMovementController>();
+
+                opposingCargoCarrier =
+                    candidate.GetComponent<CargoCarrier>();
+
+                opposingStatus =
+                    candidate.GetComponent<CharacterStatusController>();
+
+                return;
+            }
+        }
+
+        private bool TryDashAtOpposingPlayer()
+        {
+            if (dashController == null ||
+                opposingPlayer == null ||
+                opposingMovement == null ||
+                opposingCargoCarrier == null)
+            {
+                return false;
+            }
+
+            if (dashController.IsOnCooldown ||
+                !opposingCargoCarrier.IsCarrying)
+            {
+                return false;
+            }
+
+            if (opposingStatus != null &&
+                opposingStatus.IsInvulnerable)
+            {
+                return false;
+            }
+
+            Vector2Int botCell =
+                movementController.EffectiveCell;
+
+            Vector2Int playerCell =
+                opposingMovement.EffectiveCell;
+
+            Vector2Int difference =
+                playerCell - botCell;
+
+            if (!TryGetDashDirection(
+                    difference,
+                    out Vector2Int dashDirection))
+            {
+                return false;
+            }
+
+            return dashController.TryDash(
+                dashDirection);
+        }
+
+        private static bool TryGetDashDirection(
+            Vector2Int difference,
+            out Vector2Int direction)
+        {
+            direction = Vector2Int.zero;
+
+            bool sameColumn =
+                difference.x == 0 &&
+                difference.y != 0;
+
+            bool sameRow =
+                difference.y == 0 &&
+                difference.x != 0;
+
+            if (!sameColumn && !sameRow)
+            {
+                return false;
+            }
+
+            int distance =
+                Mathf.Abs(difference.x) +
+                Mathf.Abs(difference.y);
+
+            if (distance < 1 ||
+                distance > 2)
+            {
+                return false;
+            }
+
+            if (sameColumn)
+            {
+                direction =
+                    difference.y > 0
+                        ? Vector2Int.up
+                        : Vector2Int.down;
+
+                return true;
+            }
+
+            direction =
+                difference.x > 0
+                    ? Vector2Int.right
+                    : Vector2Int.left;
+
+            return true;
+        }
+
         private bool ValidateDependencies()
         {
             if (pathfinder == null)
@@ -345,6 +478,26 @@ namespace CargoClash.Movement
                 Debug.LogError(
                     $"Home DeliveryZone was not found for " +
                     $"{playerIdentity.Side}.",
+                    this);
+
+                return false;
+            }
+
+            if (dashController == null)
+            {
+                Debug.LogError(
+                    "GridDashController was not found on the bot.",
+                    this);
+
+                return false;
+            }
+
+            if (opposingPlayer == null ||
+                opposingMovement == null ||
+                opposingCargoCarrier == null)
+            {
+                Debug.LogError(
+                    "Opposing player dependencies were not found.",
                     this);
 
                 return false;
