@@ -40,6 +40,8 @@ namespace CargoClash.Movement
         [SerializeField]
         private GridMapGenerator mapGenerator;
 
+        private CharacterHeatController heatController;
+
         [SerializeField]
         private GridOccupancyManager occupancyManager;
 
@@ -51,6 +53,8 @@ namespace CargoClash.Movement
 
         private bool dashQueued;
         private Vector2Int queuedDashDirection;
+
+
 
         public bool IsDashQueued => dashQueued;
 
@@ -72,6 +76,9 @@ namespace CargoClash.Movement
 
             playerIdentity =
                 GetComponent<PlayerIdentity>();
+
+            heatController =
+                GetComponent<CharacterHeatController>();
 
             if (mapGenerator == null)
             {
@@ -123,7 +130,9 @@ namespace CargoClash.Movement
         {
             if (IsOnCooldown ||
                 dashQueued ||
-                movementController.IsDashing)
+                movementController.IsDashing ||
+                (heatController != null &&
+                 heatController.IsOverheated))
             {
                 return false;
             }
@@ -159,7 +168,9 @@ namespace CargoClash.Movement
         {
             if (IsOnCooldown ||
                 movementController.IsMoving ||
-                movementController.IsDashing)
+                movementController.IsDashing ||
+                (heatController != null &&
+                 heatController.IsOverheated))
             {
                 return false;
             }
@@ -195,6 +206,8 @@ namespace CargoClash.Movement
                     direction);
             }
 
+            heatController?.RegisterDash();
+
             return true;
         }
 
@@ -218,9 +231,9 @@ namespace CargoClash.Movement
                 : carriedDashDistance;
         }
 
-        private void HandleDashHit(
-            GridMovementController targetMovement,
-            Vector2Int dashDirection)
+        private bool HandleDashHit(
+    GridMovementController targetMovement,
+    Vector2Int dashDirection)
         {
             PlayerIdentity targetIdentity =
                 targetMovement.GetComponent<PlayerIdentity>();
@@ -229,7 +242,7 @@ namespace CargoClash.Movement
                 targetIdentity.Side ==
                 playerIdentity.Side)
             {
-                return;
+                return false;
             }
 
             CharacterStatusController targetStatus =
@@ -243,7 +256,7 @@ namespace CargoClash.Movement
                     "CharacterStatusController.",
                     targetMovement);
 
-                return;
+                return false;
             }
 
             bool hitApplied =
@@ -256,7 +269,7 @@ namespace CargoClash.Movement
                     "because it is invulnerable.",
                     this);
 
-                return;
+                return false;
             }
 
             CargoCarrier targetCarrier =
@@ -301,6 +314,8 @@ namespace CargoClash.Movement
                 $"{targetIdentity.Side}. " +
                 $"Cargo dropped: {droppedCargo}.",
                 this);
+
+            return true;
         }
 
         private Vector2Int FindDropCell(

@@ -7,16 +7,16 @@ namespace CargoClash.Gameplay
     [RequireComponent(typeof(GridMovementController))]
     public sealed class CharacterStatusController : MonoBehaviour
     {
-        [Header("Status")]
+        [Header("Dash Hit")]
         [SerializeField, Min(0f)]
-        private float defaultStunDuration = 0.6f;
+        private float defaultStunDuration = 0.8f;
 
         [SerializeField, Min(0f)]
-        private float defaultInvulnerabilityDuration = 1f;
+        private float defaultInvulnerabilityDuration = 1.5f;
 
         private GridMovementController movementController;
 
-        private Coroutine statusCoroutine;
+        private Coroutine dashStatusCoroutine;
 
         private bool isStunned;
         private bool isInvulnerable;
@@ -38,18 +38,18 @@ namespace CargoClash.Gameplay
                 return false;
             }
 
-            if (statusCoroutine != null)
+            if (dashStatusCoroutine != null)
             {
-                StopCoroutine(statusCoroutine);
+                StopCoroutine(dashStatusCoroutine);
             }
 
-            statusCoroutine =
-                StartCoroutine(StatusRoutine());
+            dashStatusCoroutine =
+                StartCoroutine(DashStatusRoutine());
 
             return true;
         }
 
-        private IEnumerator StatusRoutine()
+        private IEnumerator DashStatusRoutine()
         {
             isStunned = true;
 
@@ -74,15 +74,15 @@ namespace CargoClash.Gameplay
             }
 
             isInvulnerable = false;
-            statusCoroutine = null;
+            dashStatusCoroutine = null;
         }
 
         private void OnDisable()
         {
-            if (statusCoroutine != null)
+            if (dashStatusCoroutine != null)
             {
-                StopCoroutine(statusCoroutine);
-                statusCoroutine = null;
+                StopCoroutine(dashStatusCoroutine);
+                dashStatusCoroutine = null;
             }
 
             isStunned = false;

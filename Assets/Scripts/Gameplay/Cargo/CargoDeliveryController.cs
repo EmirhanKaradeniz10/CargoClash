@@ -19,9 +19,15 @@ namespace CargoClash.Gameplay.Cargo
         [SerializeField]
         private MatchScoreManager scoreManager;
 
+        [Header("Heat")]
+        [SerializeField, Min(0f)]
+        private float deliveryHeatReduction = 15f;
+
         private CargoCarrier cargoCarrier;
         private PlayerIdentity playerIdentity;
         private GridMovementController movementController;
+
+        private CharacterHeatController heatController;
 
         private Vector2Int lastCheckedCell;
 
@@ -29,8 +35,9 @@ namespace CargoClash.Gameplay.Cargo
         {
             cargoCarrier = GetComponent<CargoCarrier>();
             playerIdentity = GetComponent<PlayerIdentity>();
-            movementController =
-                GetComponent<GridMovementController>();
+            movementController = GetComponent<GridMovementController>();
+
+            heatController = GetComponent<CharacterHeatController>();
 
             if (scoreManager == null)
             {
@@ -99,6 +106,9 @@ namespace CargoClash.Gameplay.Cargo
             scoreManager.AddScore(
                 playerIdentity.Side,
                 awardedScore);
+
+            heatController?.ReduceHeat(
+                deliveryHeatReduction);
 
             Debug.Log(
                 $"{playerIdentity.Side} delivered " +

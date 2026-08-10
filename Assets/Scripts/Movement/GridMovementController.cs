@@ -19,6 +19,8 @@ namespace CargoClash.Movement
         [SerializeField, Min(0.1f)]
         private float movementSpeed = 5f;
 
+        private float movementSpeedMultiplier = 1f;
+
         [SerializeField]
         private GridOccupancyManager occupancyManager;
 
@@ -32,6 +34,7 @@ namespace CargoClash.Movement
 
         private bool isMoving;
         private bool isDashing;
+
 
         private bool isMovementLocked;
 
@@ -65,6 +68,9 @@ namespace CargoClash.Movement
             isMoving
                 ? movementTargetCell
                 : CurrentCell;
+
+        public float MovementSpeedMultiplier =>
+            movementSpeedMultiplier;
 
         private void Awake()
         {
@@ -145,11 +151,6 @@ namespace CargoClash.Movement
                 return false;
             }
 
-            if (isDashing)
-            {
-                return false;
-            }
-
             if (isMoving)
             {
                 bufferedDirection = direction;
@@ -205,13 +206,6 @@ namespace CargoClash.Movement
                         isMoving ||
                         maximumDistance <= 0 ||
                         !IsCardinalDirection(direction))
-            {
-                return false;
-            }
-
-            if (isMoving ||
-                maximumDistance <= 0 ||
-                !IsCardinalDirection(direction))
             {
                 return false;
             }
@@ -301,8 +295,13 @@ namespace CargoClash.Movement
                     startPosition,
                     targetPosition);
 
+            float effectiveSpeed =
+                    movementSpeed *
+                    movementSpeedMultiplier;
+
             float duration =
-                distance / movementSpeed;
+                distance /
+                Mathf.Max(0.01f, effectiveSpeed);
 
             float elapsedTime = 0f;
 
@@ -428,6 +427,12 @@ namespace CargoClash.Movement
             {
                 bufferedDirection = Vector2Int.zero;
             }
+        }
+
+        public void SetMovementSpeedMultiplier(float multiplier)
+        {
+            movementSpeedMultiplier =
+                Mathf.Max(0.1f, multiplier);
         }
 
         private IEnumerator DashRecoveryRoutine(
