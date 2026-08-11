@@ -4102,6 +4102,51 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 177642258}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &182105893
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 182105894}
+  - component: {fileID: 182105895}
+  m_Layer: 0
+  m_Name: PowerUpSlot_Center
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &182105894
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 182105893}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 9.5, y: 0.5, z: 10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1458287516}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &182105895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 182105893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ef168b1dcc1cc14dbb2d74da57b2773, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.PowerUps.PowerUpSpawnSlot
+  spawnPoint: {fileID: 0}
 --- !u!1 &184408982
 GameObject:
   m_ObjectHideFlags: 0
@@ -7882,6 +7927,10 @@ MonoBehaviour:
   fillImage: {fileID: 896453723}
   heatText: {fileID: 709965436}
   label: OPPONENT HEAT
+  normalColor: {r: 0.15, g: 0.65, b: 1, a: 1}
+  warningColor: {r: 1, g: 0.55, b: 0.1, a: 1}
+  dangerColor: {r: 1, g: 0.1, b: 0.1, a: 1}
+  warningThreshold: 0.6
 --- !u!114 &313912516
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8698,6 +8747,58 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 349801350}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &354547112
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 354547114}
+  - component: {fileID: 354547113}
+  m_Layer: 0
+  m_Name: PowerUpSpawnManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &354547113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 354547112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0a65b1babe35fc42ae9228bc85db19e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.PowerUps.PowerUpSpawnManager
+  spawnSlots:
+  - {fileID: 1739156436}
+  - {fileID: 182105895}
+  - {fileID: 990145321}
+  shieldPowerUpPrefab: {fileID: 5454143879087636687, guid: cc6c7dbb2c7b695449366e2493a2f00a, type: 3}
+  initialSpawnDelay: 1
+  activeLifetime: 10
+  respawnDelay: 6
+--- !u!4 &354547114
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 354547112}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 6.87432, y: -149.01794, z: 134.60172}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1623474177}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &356350428
 GameObject:
   m_ObjectHideFlags: 0
@@ -11159,6 +11260,10 @@ MonoBehaviour:
   fillImage: {fileID: 1915961407}
   heatText: {fileID: 1169034266}
   label: PLAYER HEAT
+  normalColor: {r: 0.15, g: 0.65, b: 1, a: 1}
+  warningColor: {r: 1, g: 0.55, b: 0.1, a: 1}
+  dangerColor: {r: 1, g: 0.1, b: 0.1, a: 1}
+  warningThreshold: 0.6
 --- !u!1 &471840729
 GameObject:
   m_ObjectHideFlags: 0
@@ -19913,6 +20018,19 @@ MonoBehaviour:
   coolingDelay: 0.75
   overheatExitThreshold: 40
   overheatedMovementMultiplier: 0.6
+--- !u!114 &783676776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 783676737}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebccc508901b3044086cbe2f5793b275, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.PowerUps.CharacterShieldController
+  startsWithShield: 0
 --- !u!1 &784769122
 GameObject:
   m_ObjectHideFlags: 0
@@ -25668,6 +25786,51 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 989981658}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &990145319
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 990145320}
+  - component: {fileID: 990145321}
+  m_Layer: 0
+  m_Name: PowerUpSlot_Lower
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &990145320
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 990145319}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 9.5, y: 0.5, z: 6}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1458287516}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &990145321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 990145319}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ef168b1dcc1cc14dbb2d74da57b2773, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.PowerUps.PowerUpSpawnSlot
+  spawnPoint: {fileID: 0}
 --- !u!1 &994904092
 GameObject:
   m_ObjectHideFlags: 0
@@ -35643,6 +35806,40 @@ Transform:
   - {fileID: 1530861049}
   m_Father: {fileID: 84060434}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1458287515
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1458287516}
+  m_Layer: 0
+  m_Name: PowerUpSlots
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1458287516
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1458287515}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1739156435}
+  - {fileID: 182105894}
+  - {fileID: 990145320}
+  m_Father: {fileID: 1623474177}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1458488085
 GameObject:
   m_ObjectHideFlags: 0
@@ -39332,6 +39529,8 @@ Transform:
   - {fileID: 1484083095}
   - {fileID: 514229243}
   - {fileID: 2124408645}
+  - {fileID: 1458287516}
+  - {fileID: 354547114}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1624940421
@@ -39848,6 +40047,19 @@ MonoBehaviour:
   coolingDelay: 0.75
   overheatExitThreshold: 40
   overheatedMovementMultiplier: 0.6
+--- !u!114 &1631151215
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1158266857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebccc508901b3044086cbe2f5793b275, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.PowerUps.CharacterShieldController
+  startsWithShield: 0
 --- !u!1 &1642013064
 GameObject:
   m_ObjectHideFlags: 0
@@ -41614,6 +41826,51 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1738203627}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1739156434
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1739156435}
+  - component: {fileID: 1739156436}
+  m_Layer: 0
+  m_Name: PowerUpSlot_Upper
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1739156435
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1739156434}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 9.5, y: 0.5, z: 14}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1458287516}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1739156436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1739156434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ef168b1dcc1cc14dbb2d74da57b2773, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CargoClash.Gameplay.PowerUps.PowerUpSpawnSlot
+  spawnPoint: {fileID: 0}
 --- !u!1 &1741920587
 GameObject:
   m_ObjectHideFlags: 0
@@ -51755,6 +52012,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1622974352518742489, guid: 80a3fcaf7a8d99f4bb8ca2f8152d8e51, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1631151205}
+    - targetCorrespondingSourceObject: {fileID: 1622974352518742489, guid: 80a3fcaf7a8d99f4bb8ca2f8152d8e51, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1631151215}
   m_SourcePrefab: {fileID: 100100000, guid: 80a3fcaf7a8d99f4bb8ca2f8152d8e51, type: 3}
 --- !u!1001 &7637649977693122113
 PrefabInstance:
@@ -51856,6 +52116,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3078557802807398884, guid: e19825f352aeef043acd7d916f011234, type: 3}
       insertIndex: -1
       addedObject: {fileID: 783676766}
+    - targetCorrespondingSourceObject: {fileID: 3078557802807398884, guid: e19825f352aeef043acd7d916f011234, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 783676776}
   m_SourcePrefab: {fileID: 100100000, guid: e19825f352aeef043acd7d916f011234, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

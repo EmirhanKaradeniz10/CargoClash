@@ -3,6 +3,8 @@ using CargoClash.Gameplay.Cargo;
 using CargoClash.Map;
 using UnityEngine;
 
+using CargoClash.Gameplay.PowerUps;
+
 namespace CargoClash.Movement
 {
     [RequireComponent(typeof(GridMovementController))]
@@ -242,6 +244,21 @@ namespace CargoClash.Movement
                 targetIdentity.Side ==
                 playerIdentity.Side)
             {
+                return false;
+            }
+
+            CharacterShieldController targetShield =
+                targetMovement.GetComponent<
+                    CharacterShieldController>();
+
+            if (targetShield != null &&
+                targetShield.TryConsumeShield())
+            {
+                Debug.Log(
+                    $"{targetIdentity.Side} blocked the dash " +
+                    "with a shield.",
+                    this);
+
                 return false;
             }
 
