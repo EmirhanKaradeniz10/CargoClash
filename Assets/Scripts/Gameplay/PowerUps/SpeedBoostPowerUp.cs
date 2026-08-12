@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace CargoClash.Gameplay.PowerUps
 {
-    public sealed class ShieldPowerUp : PowerUpBase
+    public sealed class SpeedBoostPowerUp : PowerUpBase
     {
         private bool isConsumed;
 
@@ -13,15 +13,15 @@ namespace CargoClash.Gameplay.PowerUps
                 return;
             }
 
-            CharacterShieldController shieldController =
-                other.GetComponent<CharacterShieldController>();
+            CharacterSpeedBoostController speedController =
+                other.GetComponent<CharacterSpeedBoostController>();
 
-            if (shieldController == null)
+            if (speedController == null)
             {
                 return;
             }
 
-            if (!shieldController.TryGiveShield())
+            if (!speedController.TryActivateSpeedBoost())
             {
                 return;
             }
@@ -29,7 +29,7 @@ namespace CargoClash.Gameplay.PowerUps
             isConsumed = true;
 
             Debug.Log(
-                $"{shieldController.name} picked up Shield.",
+                $"{speedController.name} picked up Speed Boost.",
                 this);
 
             ConsumePowerUp();

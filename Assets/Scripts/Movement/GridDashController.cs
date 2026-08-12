@@ -68,6 +68,9 @@ namespace CargoClash.Movement
                 0f,
                 nextAllowedDashTime - Time.time);
 
+        public float CooldownDuration =>
+            cooldownDuration;
+
         private void Awake()
         {
             movementController =

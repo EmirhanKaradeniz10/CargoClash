@@ -6,19 +6,10 @@ namespace CargoClash.Movement
     [RequireComponent(typeof(GridMovementController))]
     public sealed class HumanGridInput : MonoBehaviour
     {
-        [Header("Held Input")]
-        [SerializeField, Min(0f)]
-        private float initialRepeatDelay = 0.18f;
-
-        [SerializeField, Min(0.01f)]
-        private float repeatInterval = 0.08f;
-
         private GridMovementController movementController;
-
-        private Vector2Int heldDirection;
-        private float nextRepeatTime;
-
         private GridDashController dashController;
+
+        private Vector2Int lastHeldDirection;
 
         private void Awake()
         {
@@ -31,11 +22,14 @@ namespace CargoClash.Movement
 
         private void Update()
         {
-            Keyboard keyboard = Keyboard.current;
+            Keyboard keyboard =
+                Keyboard.current;
 
             if (keyboard == null)
             {
-                ResetHeldInput();
+                lastHeldDirection =
+                    Vector2Int.zero;
+
                 return;
             }
 
@@ -43,7 +37,9 @@ namespace CargoClash.Movement
                 (dashController.IsDashQueued ||
                  movementController.IsDashing))
             {
-                ResetHeldInput();
+                lastHeldDirection =
+                    Vector2Int.zero;
+
                 return;
             }
 
@@ -52,34 +48,32 @@ namespace CargoClash.Movement
 
             if (currentDirection == Vector2Int.zero)
             {
-                ResetHeldInput();
+                lastHeldDirection =
+                    Vector2Int.zero;
+
                 return;
             }
 
             bool directionChanged =
-                currentDirection != heldDirection;
+                currentDirection !=
+                lastHeldDirection;
+
+            lastHeldDirection =
+                currentDirection;
 
             if (directionChanged)
             {
-                heldDirection = currentDirection;
-
-                movementController.TryMove(heldDirection);
-
-                nextRepeatTime =
-                    Time.time + initialRepeatDelay;
+                movementController.TryMove(
+                    currentDirection);
 
                 return;
             }
 
-            if (Time.time < nextRepeatTime)
+            if (!movementController.IsMoving)
             {
-                return;
+                movementController.TryMove(
+                    currentDirection);
             }
-
-            movementController.TryMove(heldDirection);
-
-            nextRepeatTime =
-                Time.time + repeatInterval;
         }
 
         private static Vector2Int ReadHeldDirection(
@@ -110,21 +104,6 @@ namespace CargoClash.Movement
             }
 
             return Vector2Int.zero;
-        }
-
-        private void ResetHeldInput()
-        {
-            heldDirection = Vector2Int.zero;
-            nextRepeatTime = 0f;
-        }
-
-        private void OnValidate()
-        {
-            if (repeatInterval > initialRepeatDelay &&
-                initialRepeatDelay > 0f)
-            {
-                repeatInterval = initialRepeatDelay;
-            }
         }
     }
 }

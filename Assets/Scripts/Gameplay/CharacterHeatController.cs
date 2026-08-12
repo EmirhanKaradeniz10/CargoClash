@@ -194,7 +194,7 @@ namespace CargoClash.Gameplay
             isOverheated = true;
 
             movementController
-                .SetMovementSpeedMultiplier(
+                .SetStatusSpeedMultiplier(
                     overheatedMovementMultiplier);
 
             movementController.ClearBufferedMovement();
@@ -214,7 +214,7 @@ namespace CargoClash.Gameplay
             isOverheated = false;
 
             movementController
-                .SetMovementSpeedMultiplier(1f);
+                .SetStatusSpeedMultiplier(1f);
 
             lastActivityTime = Time.time;
 
@@ -259,7 +259,7 @@ namespace CargoClash.Gameplay
             if (movementController != null)
             {
                 movementController
-                    .SetMovementSpeedMultiplier(1f);
+                    .SetStatusSpeedMultiplier(1f);
             }
         }
 

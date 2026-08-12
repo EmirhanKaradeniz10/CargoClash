@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace CargoClash.Gameplay.PowerUps
@@ -9,9 +10,13 @@ namespace CargoClash.Gameplay.PowerUps
         [SerializeField]
         private PowerUpSpawnSlot[] spawnSlots;
 
-        [Header("Prefab")]
+        [Header("Power-Ups")]
         [SerializeField]
-        private ShieldPowerUp shieldPowerUpPrefab;
+        private PowerUpBase[] powerUpPrefabs;
+
+        [Header("Limits")]
+        [SerializeField, Min(1)]
+        private int maximumActivePowerUps = 2;
 
         [Header("Timing")]
         [SerializeField, Min(0f)]
@@ -23,10 +28,13 @@ namespace CargoClash.Gameplay.PowerUps
         [SerializeField, Min(0f)]
         private float respawnDelay = 6f;
 
-        private ShieldPowerUp activePowerUp;
-        private Coroutine spawnRoutine;
+        private readonly List<PowerUpBase>
+            activePowerUps = new();
 
-        private int lastSpawnSlotIndex = -1;
+        private readonly HashSet<int>
+            occupiedSlotIndices = new();
+
+        private int lastPowerUpPrefabIndex = -1;
 
         private void Start()
         {
@@ -36,9 +44,8 @@ namespace CargoClash.Gameplay.PowerUps
                 return;
             }
 
-            spawnRoutine =
-                StartCoroutine(
-                    InitialSpawnRoutine());
+            StartCoroutine(
+                InitialSpawnRoutine());
         }
 
         private IEnumerator InitialSpawnRoutine()
@@ -49,20 +56,41 @@ namespace CargoClash.Gameplay.PowerUps
                     initialSpawnDelay);
             }
 
-            SpawnPowerUp();
+            int initialCount =
+                Mathf.Min(
+                    maximumActivePowerUps,
+                    spawnSlots.Length);
+
+            for (int i = 0;
+                 i < initialCount;
+                 i++)
+            {
+                SpawnPowerUp();
+            }
         }
 
         private void SpawnPowerUp()
         {
-            if (activePowerUp != null)
+            CleanupActivePowerUps();
+
+            if (activePowerUps.Count >=
+                maximumActivePowerUps)
             {
                 return;
             }
 
             int slotIndex =
-                SelectSpawnSlotIndex();
+                SelectAvailableSlotIndex();
 
             if (slotIndex < 0)
+            {
+                return;
+            }
+
+            int prefabIndex =
+                SelectPowerUpPrefabIndex();
+
+            if (prefabIndex < 0)
             {
                 return;
             }
@@ -70,39 +98,49 @@ namespace CargoClash.Gameplay.PowerUps
             PowerUpSpawnSlot slot =
                 spawnSlots[slotIndex];
 
-            activePowerUp =
+            PowerUpBase prefab =
+                powerUpPrefabs[prefabIndex];
+
+            PowerUpBase instance =
                 Instantiate(
-                    shieldPowerUpPrefab,
+                    prefab,
                     slot.SpawnPosition,
                     Quaternion.identity);
 
-            lastSpawnSlotIndex =
-                slotIndex;
+            activePowerUps.Add(instance);
 
-            activePowerUp.Initialize(
+            occupiedSlotIndices.Add(
+                slotIndex);
+
+            lastPowerUpPrefabIndex =
+                prefabIndex;
+
+            instance.Initialize(
                 this,
+                slotIndex,
                 activeLifetime);
+
+            Debug.Log(
+                $"Spawned {prefab.name} " +
+                $"at slot {slotIndex}.",
+                this);
         }
 
         public void NotifyPowerUpRemoved(
-            ShieldPowerUp powerUp)
+            PowerUpBase powerUp,
+            int slotIndex)
         {
-            if (powerUp == null ||
-                activePowerUp != powerUp)
+            if (powerUp != null)
             {
-                return;
+                activePowerUps.Remove(
+                    powerUp);
             }
 
-            activePowerUp = null;
+            occupiedSlotIndices.Remove(
+                slotIndex);
 
-            if (spawnRoutine != null)
-            {
-                StopCoroutine(spawnRoutine);
-            }
-
-            spawnRoutine =
-                StartCoroutine(
-                    RespawnRoutine());
+            StartCoroutine(
+                RespawnRoutine());
         }
 
         private IEnumerator RespawnRoutine()
@@ -113,19 +151,46 @@ namespace CargoClash.Gameplay.PowerUps
                     respawnDelay);
             }
 
-            spawnRoutine = null;
             SpawnPowerUp();
         }
 
-        private int SelectSpawnSlotIndex()
+        private int SelectAvailableSlotIndex()
         {
-            if (spawnSlots == null ||
-                spawnSlots.Length == 0)
+            List<int> availableSlots =
+                new();
+
+            for (int i = 0;
+                 i < spawnSlots.Length;
+                 i++)
+            {
+                if (!occupiedSlotIndices.Contains(i))
+                {
+                    availableSlots.Add(i);
+                }
+            }
+
+            if (availableSlots.Count == 0)
             {
                 return -1;
             }
 
-            if (spawnSlots.Length == 1)
+            int randomIndex =
+                Random.Range(
+                    0,
+                    availableSlots.Count);
+
+            return availableSlots[randomIndex];
+        }
+
+        private int SelectPowerUpPrefabIndex()
+        {
+            if (powerUpPrefabs == null ||
+                powerUpPrefabs.Length == 0)
+            {
+                return -1;
+            }
+
+            if (powerUpPrefabs.Length == 1)
             {
                 return 0;
             }
@@ -137,25 +202,22 @@ namespace CargoClash.Gameplay.PowerUps
                 selectedIndex =
                     Random.Range(
                         0,
-                        spawnSlots.Length);
+                        powerUpPrefabs.Length);
             }
             while (selectedIndex ==
-                   lastSpawnSlotIndex);
+                   lastPowerUpPrefabIndex);
 
             return selectedIndex;
         }
 
+        private void CleanupActivePowerUps()
+        {
+            activePowerUps.RemoveAll(
+                powerUp => powerUp == null);
+        }
+
         private bool ValidateSetup()
         {
-            if (shieldPowerUpPrefab == null)
-            {
-                Debug.LogError(
-                    "Shield power-up prefab is not assigned.",
-                    this);
-
-                return false;
-            }
-
             if (spawnSlots == null ||
                 spawnSlots.Length == 0)
             {
@@ -180,6 +242,37 @@ namespace CargoClash.Gameplay.PowerUps
 
                 return false;
             }
+
+            if (powerUpPrefabs == null ||
+                powerUpPrefabs.Length == 0)
+            {
+                Debug.LogError(
+                    "No power-up prefabs are assigned.",
+                    this);
+
+                return false;
+            }
+
+            foreach (PowerUpBase prefab
+                     in powerUpPrefabs)
+            {
+                if (prefab != null)
+                {
+                    continue;
+                }
+
+                Debug.LogError(
+                    "A power-up prefab is missing.",
+                    this);
+
+                return false;
+            }
+
+            maximumActivePowerUps =
+                Mathf.Clamp(
+                    maximumActivePowerUps,
+                    1,
+                    spawnSlots.Length);
 
             return true;
         }

@@ -19,7 +19,9 @@ namespace CargoClash.Movement
         [SerializeField, Min(0.1f)]
         private float movementSpeed = 5f;
 
-        private float movementSpeedMultiplier = 1f;
+        private float statusSpeedMultiplier = 1f;
+        private float powerUpSpeedMultiplier = 1f;
+        private float cargoSpeedMultiplier = 1f;
 
         [SerializeField]
         private GridOccupancyManager occupancyManager;
@@ -70,7 +72,9 @@ namespace CargoClash.Movement
                 : CurrentCell;
 
         public float MovementSpeedMultiplier =>
-            movementSpeedMultiplier;
+            statusSpeedMultiplier *
+            powerUpSpeedMultiplier *
+            cargoSpeedMultiplier;
 
         private void Awake()
         {
@@ -296,8 +300,8 @@ namespace CargoClash.Movement
                     targetPosition);
 
             float effectiveSpeed =
-                    movementSpeed *
-                    movementSpeedMultiplier;
+                movementSpeed *
+                MovementSpeedMultiplier;
 
             float duration =
                 distance /
@@ -429,9 +433,21 @@ namespace CargoClash.Movement
             }
         }
 
-        public void SetMovementSpeedMultiplier(float multiplier)
+        public void SetStatusSpeedMultiplier(float multiplier)
         {
-            movementSpeedMultiplier =
+            statusSpeedMultiplier =
+                Mathf.Max(0.1f, multiplier);
+        }
+
+        public void SetPowerUpSpeedMultiplier(float multiplier)
+        {
+            powerUpSpeedMultiplier =
+                Mathf.Max(0.1f, multiplier);
+        }
+
+        public void SetCargoSpeedMultiplier(float multiplier)
+        {
+            cargoSpeedMultiplier =
                 Mathf.Max(0.1f, multiplier);
         }
 
