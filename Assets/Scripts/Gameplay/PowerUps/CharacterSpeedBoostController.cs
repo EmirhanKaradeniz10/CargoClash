@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 
+
 namespace CargoClash.Gameplay.PowerUps
 {
     public sealed class CharacterSpeedBoostController : MonoBehaviour
@@ -65,6 +66,20 @@ namespace CargoClash.Gameplay.PowerUps
             return true;
         }
 
+        public void ResetSpeedBoost()
+        {
+            if (boostCoroutine != null)
+            {
+                StopCoroutine(
+                    boostCoroutine);
+
+                boostCoroutine = null;
+            }
+
+            movementController
+                .SetPowerUpSpeedMultiplier(1f);
+        }
+
         private IEnumerator SpeedBoostRoutine()
         {
             yield return new WaitForSeconds(duration);
@@ -81,13 +96,7 @@ namespace CargoClash.Gameplay.PowerUps
 
         private void OnDisable()
         {
-            if (movementController != null)
-            {
-                movementController
-                    .SetPowerUpSpeedMultiplier(1f);
-            }
-
-            boostCoroutine = null;
+            ResetSpeedBoost();
         }
     }
 }

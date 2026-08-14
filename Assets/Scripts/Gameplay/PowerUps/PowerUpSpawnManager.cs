@@ -28,6 +28,8 @@ namespace CargoClash.Gameplay.PowerUps
         [SerializeField, Min(0f)]
         private float respawnDelay = 6f;
 
+        private bool isResetting;
+
         private readonly List<PowerUpBase>
             activePowerUps = new();
 
@@ -46,6 +48,51 @@ namespace CargoClash.Gameplay.PowerUps
 
             StartCoroutine(
                 InitialSpawnRoutine());
+        }
+
+        public void ResetPowerUps()
+        {
+            StopAllCoroutines();
+
+            isResetting = true;
+
+            foreach (PowerUpBase powerUp
+                     in activePowerUps)
+            {
+                if (powerUp != null)
+                {
+                    Destroy(powerUp.gameObject);
+                }
+            }
+
+            activePowerUps.Clear();
+            occupiedSlotIndices.Clear();
+
+            lastPowerUpPrefabIndex = -1;
+
+            StartCoroutine(
+                ResetPowerUpsRoutine());
+        }
+
+        private IEnumerator ResetPowerUpsRoutine()
+        {
+            // Destroy() frame sonunda gerçekleştiği için
+            // eski objelerin gerçekten silinmesini bekliyoruz.
+            yield return null;
+
+            isResetting = false;
+
+            int spawnCount =
+                Mathf.Min(
+                    maximumActivePowerUps,
+                    spawnSlots.Length);
+
+            for (int i = 0;
+                 i < spawnCount;
+                 i++)
+            {
+                SpawnPowerUp();
+            }
         }
 
         private IEnumerator InitialSpawnRoutine()
@@ -126,10 +173,13 @@ namespace CargoClash.Gameplay.PowerUps
                 this);
         }
 
-        public void NotifyPowerUpRemoved(
-            PowerUpBase powerUp,
-            int slotIndex)
+        public void NotifyPowerUpRemoved( PowerUpBase powerUp, int slotIndex)
         {
+            if (isResetting)
+            {
+                return;
+            }
+
             if (powerUp != null)
             {
                 activePowerUps.Remove(
@@ -142,6 +192,7 @@ namespace CargoClash.Gameplay.PowerUps
             StartCoroutine(
                 RespawnRoutine());
         }
+
 
         private IEnumerator RespawnRoutine()
         {
@@ -214,6 +265,12 @@ namespace CargoClash.Gameplay.PowerUps
         {
             activePowerUps.RemoveAll(
                 powerUp => powerUp == null);
+        }
+
+        [ContextMenu("Reset Power-Ups")]
+        private void DebugResetPowerUps()
+        {
+            ResetPowerUps();
         }
 
         private bool ValidateSetup()

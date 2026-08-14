@@ -13,6 +13,10 @@ namespace CargoClash.UI
         [SerializeField]
         private Image fillImage;
 
+        [Header("Blocked State")]
+        [SerializeField, Range(0f, 1f)]
+        private float blockedAlpha = 0.35f;
+
         private void Update()
         {
             if (dashController == null ||
@@ -21,6 +25,12 @@ namespace CargoClash.UI
                 return;
             }
 
+            UpdateFill();
+            UpdateAvailabilityVisual();
+        }
+
+        private void UpdateFill()
+        {
             float duration =
                 dashController.CooldownDuration;
 
@@ -33,12 +43,22 @@ namespace CargoClash.UI
             float remaining =
                 dashController.RemainingCooldown;
 
-            float normalized =
+            fillImage.fillAmount =
                 1f - Mathf.Clamp01(
                     remaining / duration);
+        }
 
-            fillImage.fillAmount =
-                normalized;
+        private void UpdateAvailabilityVisual()
+        {
+            Color color =
+                fillImage.color;
+
+            color.a =
+                dashController.CanDash
+                    ? 1f
+                    : blockedAlpha;
+
+            fillImage.color = color;
         }
     }
 }

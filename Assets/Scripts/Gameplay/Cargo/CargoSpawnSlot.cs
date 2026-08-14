@@ -50,6 +50,12 @@ namespace CargoClash.Gameplay.Cargo
             return currentCargo;
         }
 
+        public void ResetSlotState()
+        {
+            currentCargo = null;
+            spawnManager = null;
+        }
+
         public void NotifyCargoRemoved(CargoItem cargo)
         {
             if (currentCargo != cargo)

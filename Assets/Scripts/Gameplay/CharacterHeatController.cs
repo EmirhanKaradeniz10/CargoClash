@@ -89,6 +89,18 @@ namespace CargoClash.Gameplay
             AddHeat(dashHeat);
         }
 
+        public void ResetHeat()
+        {
+            currentHeat = 0f;
+            isOverheated = false;
+
+            lastActivityTime =
+                Time.time;
+
+            movementController
+                .SetStatusSpeedMultiplier(1f);
+        }
+
         public void ReduceHeat(float amount)
         {
             if (amount <= 0f ||

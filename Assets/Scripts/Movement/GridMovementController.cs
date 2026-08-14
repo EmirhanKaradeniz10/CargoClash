@@ -76,6 +76,46 @@ namespace CargoClash.Movement
             powerUpSpeedMultiplier *
             cargoSpeedMultiplier;
 
+        public void ResetToCell(Vector2Int cell)
+        {
+            StopAllCoroutines();
+
+            occupancyManager.Release(
+                this,
+                CurrentCell);
+
+            isMoving = false;
+            isDashing = false;
+            isMovementLocked = false;
+
+            bufferedDirection = Vector2Int.zero;
+            facingDirection = Vector2Int.up;
+
+            statusSpeedMultiplier = 1f;
+            powerUpSpeedMultiplier = 1f;
+            cargoSpeedMultiplier = 1f;
+
+            CurrentCell = cell;
+            movementTargetCell = cell;
+
+            transform.position =
+                GridToWorld(cell);
+
+            transform.rotation =
+                Quaternion.LookRotation(
+                    Vector3.forward);
+
+            if (!occupancyManager.TryRegister(
+                    this,
+                    cell))
+            {
+                Debug.LogError(
+                    $"Could not reset {name} to cell {cell}. " +
+                    "The cell is already occupied.",
+                    this);
+            }
+        }
+
         private void Awake()
         {
             CurrentCell =

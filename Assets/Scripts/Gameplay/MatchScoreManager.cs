@@ -43,5 +43,22 @@ namespace CargoClash.Gameplay
                 $"Opponent: {opponentScore}",
                 this);
         }
+
+        public void ResetScores()
+        {
+            playerScore = 0;
+            opponentScore = 0;
+
+            Debug.Log(
+                "Match scores reset.",
+                this);
+        }
+
+        public int GetScore(PlayerSide side)
+        {
+            return side == PlayerSide.Player
+                ? playerScore
+                : opponentScore;
+        }
     }
 }

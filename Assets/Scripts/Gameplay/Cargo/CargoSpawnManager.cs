@@ -47,6 +47,8 @@ namespace CargoClash.Gameplay.Cargo
         [SerializeField, Min(0)]
         private int minimumActiveSlotCount = 3;
 
+        private bool isResetting;
+
         private readonly HashSet<CargoItem> undeliveredCargo = new();
 
         private CargoSpawnSlot lastSelectedSlot;
@@ -67,16 +69,28 @@ namespace CargoClash.Gameplay.Cargo
             FillInitialSlots();
         }
 
-        public void NotifySlotEmptied(CargoSpawnSlot emptiedSlot)
+        public void NotifySlotEmptied(
+    CargoSpawnSlot emptiedSlot)
         {
+            if (isResetting)
+            {
+                return;
+            }
+
             ScheduleRefill();
         }
 
-        public void UnregisterCargo(CargoItem cargo)
+        public void UnregisterCargo(
+    CargoItem cargo)
         {
             if (cargo != null)
             {
                 undeliveredCargo.Remove(cargo);
+            }
+
+            if (isResetting)
+            {
+                return;
             }
 
             ScheduleRefill();
@@ -91,6 +105,49 @@ namespace CargoClash.Gameplay.Cargo
                     break;
                 }
             }
+        }
+
+        public void ResetCargoSystem()
+        {
+            StopAllCoroutines();
+
+            refillCoroutine = null;
+            isResetting = true;
+
+            CargoItem[] allCargo =
+                FindObjectsByType<CargoItem>();
+
+            foreach (CargoItem cargo in allCargo)
+            {
+                if (cargo != null)
+                {
+                    Destroy(cargo.gameObject);
+                }
+            }
+
+            undeliveredCargo.Clear();
+
+            foreach (CargoSpawnSlot slot in spawnSlots)
+            {
+                if (slot != null)
+                {
+                    slot.ResetSlotState();
+                }
+            }
+
+            lastSelectedSlot = null;
+
+            StartCoroutine(
+                ResetCargoRoutine());
+        }
+
+        private IEnumerator ResetCargoRoutine()
+        {
+            yield return null;
+
+            isResetting = false;
+
+            FillInitialSlots();
         }
 
         private void ScheduleRefill()
@@ -251,6 +308,12 @@ namespace CargoClash.Gameplay.Cargo
             }
 
             return true;
+        }
+
+        [ContextMenu("Reset Cargo System")]
+        private void DebugResetCargoSystem()
+        {
+            ResetCargoSystem();
         }
 
         private void OnValidate()

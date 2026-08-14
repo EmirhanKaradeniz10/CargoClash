@@ -338,6 +338,27 @@ namespace CargoClash.Movement
             return true;
         }
 
+        public bool CanDash
+        {
+            get
+            {
+                if (IsOnCooldown ||
+                    dashQueued ||
+                    movementController.IsDashing)
+                {
+                    return false;
+                }
+
+                if (heatController != null &&
+                    heatController.IsOverheated)
+                {
+                    return false;
+                }
+
+                return GetCurrentDashDistance() > 0;
+            }
+        }
+
         private Vector2Int FindDropCell(
             Vector2Int targetCell,
             Vector2Int dashDirection)
@@ -443,6 +464,13 @@ namespace CargoClash.Movement
             }
 
             return true;
+        }
+
+        public void ResetDashState()
+        {
+            dashQueued = false;
+            queuedDashDirection = Vector2Int.zero;
+            nextAllowedDashTime = 0f;
         }
 
         private static bool IsCardinalDirection(

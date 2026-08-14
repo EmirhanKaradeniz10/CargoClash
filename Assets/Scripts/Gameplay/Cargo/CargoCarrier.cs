@@ -48,6 +48,25 @@ namespace CargoClash.Gameplay.Cargo
             return droppedCargo;
         }
 
+        public void ResetCarrier()
+        {
+            if (carriedCargo == null)
+            {
+                return;
+            }
+
+            CargoItem cargo =
+                carriedCargo;
+
+            carriedCargo = null;
+
+            if (cargo != null)
+            {
+                Destroy(
+                    cargo.gameObject);
+            }
+        }
+
         public CargoItem RemoveCarriedCargo()
         {
             if (!IsCarrying)

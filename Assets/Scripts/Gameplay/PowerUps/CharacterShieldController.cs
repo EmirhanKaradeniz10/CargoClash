@@ -33,6 +33,11 @@ namespace CargoClash.Gameplay.PowerUps
             return true;
         }
 
+        public void ResetShield()
+        {
+            hasShield = false;
+        }
+
         public bool TryGiveShield()
         {
             if (hasShield)
